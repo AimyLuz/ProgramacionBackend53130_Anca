@@ -1,48 +1,43 @@
 class ProductManager {
-    constructor(){
+    constructor() {
         this.products = [];
     }
     static id = 0;
-    addProduct(title, description, price, thumbnail, code, stock){
-        let colecciones = this.getProduct();
-        let codeRep = colecciones.some((i) => i.code === code);
+    addProduct(title, description, price, thumbnail, code, stock) {
+        let colecciones = this.products;
 
-        if (codeRep) {
+        if (colecciones.some((i) => i.code === code)) {
             console.log(`Error, el code ${code} esta repetido.`)
-        }else {
-            const newProduct = {title:title, description:description, price:price, thumbnail:thumbnail, code:code, stock:stock};
+        } else {
+            const newProduct = { title: title, description: description, price: price, thumbnail: thumbnail, code: code, stock: stock };
             console.log(newProduct)
-            if(!Object.values(newProduct).includes(undefined)){
-                const newId = colecciones.reduce((idMax, product)=> idMax > product.id ? idMax : product.id, 0) + 1
+            if (!Object.values(newProduct).includes(undefined)) {
+                const newId = colecciones.reduce((idMax, product) => idMax > product.id ? idMax : product.id, 0) + 1
                 ProductManager.id++
                 colecciones.push({
-                    ...newProduct, 
+                    ...newProduct,
                     id: newId,
                 });
-
-            }else{
+            } else {
                 console.log('Por favor, completar los campos faltantes para poder agregar el producto')
-            }    
+            }
         }
-        
-
-
     }
-
-    getProduct(){
-        return this.products 
+    getProduct() {
+        return this.products
     }
-    seachProduct(id) {
-        return this.products.find((producto) => producto.id == id);
-    }
-
     getProductById(id) {
-        !this.seachProduct(id)
-            ? console.log(`Producto con ID "${id}" no encontrado, intente con otro ID`)
-            : console.log(this.seachProduct(id));
+        if (!this.products.find((producto) => producto.id == id)) {
+            console.log(`Producto con ID "${id}" no encontrado, intente con otro ID`)
+        } else {
+            console.log(this.products.find((producto) => producto.id == id));
+        }
+
     }
 };
-const productos = new ProductManager(); 
+const productos = new ProductManager();
+
+//TESTING
 //Primer llamada = arreglo vacio
 console.log(productos.getProduct());
 
