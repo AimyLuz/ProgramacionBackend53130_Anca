@@ -5,7 +5,7 @@
     Aprobado:  ✅
 
 ### Desafío 2 : 
-    Entregado: 
+    Entregado: ✅
     Aprobado:  
 
 ### Desafío 3 : 
