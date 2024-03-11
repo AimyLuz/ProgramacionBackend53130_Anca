@@ -9,7 +9,16 @@ class ProductManager {
     static id = 0;
     async initProducts() {
         try {
-            this.products = await this.getProduct();
+            // Verificar si el archivo existe
+            const fileExists = fs.existsSync(this.path);
+            if (!fileExists) {
+                // Si el archivo no existe, crear uno nuevo con una lista vacía de productos
+                await fs.promises.writeFile(this.path, '[]');
+                this.products = [];
+            } else {
+                // Si el archivo existe, leer los productos desde el archivo
+                this.products = await this.getProduct();
+            }
             if (this.products.length > 0) {
                 // Calcular el ID máximo actual
                 const maxId = this.products.reduce((max, product) => Math.max(max, product.id), 0);
