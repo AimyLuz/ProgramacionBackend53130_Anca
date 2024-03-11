@@ -14,7 +14,7 @@ app.get("/ping", (req, res) => {
 app.get("/products", async (req, res) => {
   try {
         // Llamado a productManager
-    let productList = productos.getProduct();
+    let productList = await productos.getProduct();
     //limite query
     const { limit } = req.query;
     if (!limit) {
@@ -38,7 +38,7 @@ app.get("/products/:id", async (req, res) => {
     console.log(req.params.id);
     // Llamado a productManager
 
-    let productList =  productos.getProductById(id);
+    let productList =  await productos.getProductById(id);
     // Salida
     res.send(productList);
   } catch (error) {
