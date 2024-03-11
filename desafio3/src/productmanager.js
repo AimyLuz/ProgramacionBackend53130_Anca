@@ -30,31 +30,28 @@ class ProductManager {
         }
     }
     async addProduct(title, description, price, thumbnail, code, stock) {
-        try{
+        try {
             let colecciones = this.products;
             if (colecciones.some((i) => i.code === code)) {
                 console.log(`Error, el code ${code} está repetido.`);
                 return; // Retorno temprano si el código está repetido
             }
-            const newProduct = { title: title, description: description, price: price, thumbnail: thumbnail, code: code, stock: stock };
+            const newProduct = { title, description, price, thumbnail, code, stock };
             if (Object.values(newProduct).includes(undefined)) {
                 console.log('Por favor, completar los campos faltantes para poder agregar el producto');
                 return; // Retorno temprano si hay campos faltantes
             }
             console.log(newProduct);
-            
-            const newId = ProductManager.id++;
-            //const newId = colecciones.reduce((idMax, product) => idMax > product.id ? idMax : product.id, 0) + 1;
-            ProductManager.id++;
+            const newId = ++ProductManager.id;
             colecciones.push({
                 ...newProduct,
                 id: newId,
             });
-            await fs.promises.writeFile(this.path, JSON.stringify(this.products))
-        }catch(error){
-            throw new Error("Error al agregar el producto:", error)
+            await fs.promises.writeFile(this.path, JSON.stringify(colecciones));
+            this.products = colecciones; // Actualizar this.products
+        } catch (error) {
+            throw new Error("Error al agregar el producto:", error);
         }
-        
     }
     
     async getProduct() {
