@@ -6,10 +6,10 @@
 
 ### Desafío 2 : 
     Entregado: ✅
-    Aprobado:  
+    Aprobado:  ✅
 
 ### Desafío 3 : 
-    Entregado: 
+    Entregado: ✅
     Aprobado:  
 
 ## Primer Pre entrega : 
