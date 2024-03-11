@@ -10,6 +10,12 @@ class ProductManager {
     async initProducts() {
         try {
             this.products = await this.getProduct();
+            if (this.products.length > 0) {
+                // Calcular el ID máximo actual
+                const maxId = this.products.reduce((max, product) => Math.max(max, product.id), 0);
+                // Actualizar el ID base
+                ProductManager.id = maxId + 1;
+            }
         } catch (error) {
             throw new Error("Error al inicializar los productos:", error);
         }
@@ -27,7 +33,9 @@ class ProductManager {
                 return; // Retorno temprano si hay campos faltantes
             }
             console.log(newProduct);
-            const newId = colecciones.reduce((idMax, product) => idMax > product.id ? idMax : product.id, 0) + 1;
+            
+            const newId = ProductManager.id++;
+            //const newId = colecciones.reduce((idMax, product) => idMax > product.id ? idMax : product.id, 0) + 1;
             ProductManager.id++;
             colecciones.push({
                 ...newProduct,
@@ -87,6 +95,7 @@ class ProductManager {
     }
     colecciones[numeroIndex][campo] = valor;
     await fs.promises.writeFile(this.path, JSON.stringify(colecciones))
+    this.products = colecciones;
     console.log(`Producto ${id} elditado`)
         }catch(error){
             throw new Error("Error al intentar modificar el producto:", error)
