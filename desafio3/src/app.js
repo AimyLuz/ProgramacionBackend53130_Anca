@@ -26,7 +26,7 @@ app.get("/products", async (req, res) => {
     }
   } catch (error) {
     // Salida
-    // Manejar errores aquí
+    // Manejar errores
     console.error(error);i
     res.status(500).send("Error interno del servidor");
   }
