@@ -1,7 +1,16 @@
+import express from "express";
+import path from "path";
+import ProductManager  from "../productmanager.js";
+import { getCurrentDirname } from '../utils.js'; // Importa solo la función getCurrentDirname
+const __dirname = getCurrentDirname(import.meta.url);
+/*
 const express = require('express');
-const router = express.Router();
 const path = require("path");
-const ProductManager = require('../productmanager');
+const ProductManager = require('../productmanager');*/
+
+
+const router = express.Router();
+
 const pml = new ProductManager(path.join(__dirname, "../listadoDeProductos.json"));
 
 
@@ -44,4 +53,37 @@ router.get("/api/products", async (req, res) => {
     }
   });
 
-  module.exports = router;
+  //AGREGAR PRODUCTOS
+  router.post("/api/products", async (req,res)=>{
+    try{
+        let {title, description, price, thumbnail, code, stock, status, category}= req.body;
+        pml.addProduct(title, description, price, thumbnail, code, stock, status, category);
+        res.status(200).send("Producto agregado con exito");
+    }catch (error){
+        res.status(500).send("Error al agregar el producto")
+    }
+  });
+//ACTUALIZAR PRODUCTOS 
+  router.put("/api/products/:pid",(req,res)=>{
+    try{
+        let productId = parseInt(req.params.pid);
+        pml.updateProduct(productId, req.body);
+        res.status(200).send("Producto actualizado");
+
+    }catch(error){
+        res.status(500).send("Error al obtener el producto");
+    }
+  });
+
+  router.delete("/api/products/:pid", (req,res)=>{
+    try{
+        let productId = parseInt(req.params.pid)
+        pml.deleteProduct(productId)
+        res.status(200).send("Producto eliminado");
+    }catch(error){
+        res.status(500).send("Error al eliminar el producto");
+    }
+  });
+
+export default router;
+//module.exports = router;
