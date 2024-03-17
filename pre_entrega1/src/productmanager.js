@@ -21,12 +21,10 @@ const path = require("path");*/
             } else {
                 // Si el archivo existe, leer los productos desde el archivo
                 this.products = await this.getProduct();
-            }
-            if (this.products.length > 0) {
-                // Calcular el ID máximo actual
-                const maxId = this.products.reduce((max, product) => Math.max(max, product.id), 0);
-                // Actualizar el ID base
-                ProductManager.id = maxId + 1;
+                if (this.products.length === 0) {
+                    // Si no hay productos, establecer el ID base en 0
+                    ProductManager.id = 0;
+                }
             }
         } catch (error) {
             throw new Error("Error al inicializar los productos:", error);
@@ -45,7 +43,8 @@ const path = require("path");*/
                 return; // Retorno temprano si hay campos faltantes
             }
             console.log(newProduct);
-            const newId = ++ProductManager.id;
+            const maxId = colecciones.reduce((max, product) => Math.max(max, product.id), 0);
+            const newId = maxId + 1;
             colecciones.push({
                 ...newProduct,
                 id: newId,

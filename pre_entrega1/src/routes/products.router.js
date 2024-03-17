@@ -16,7 +16,7 @@ const pml = new ProductManager(path.join(__dirname, "../listadoDeProductos.json"
 
 
 //esto va a ir a products router
-router.get("/api/products", async (req, res) => {
+router.get("/products", async (req, res) => {
     try {
           // Llamado a productManager
       let productList = await pml.getProduct();
@@ -37,7 +37,7 @@ router.get("/api/products", async (req, res) => {
     }
   });
   
-  router.get("/api/products/:pid", async (req, res) => {
+  router.get("/products/:pid", async (req, res) => {
     try {
         let productId = parseInt(req.params.pid);
         console.log(parseInt(req.params.pid));
@@ -54,7 +54,7 @@ router.get("/api/products", async (req, res) => {
   });
 
   //AGREGAR PRODUCTOS
-  router.post("/api/products", async (req,res)=>{
+  router.post("/products", async (req,res)=>{
     try{
         let {title, description, price, thumbnail, code, stock, status, category}= req.body;
         pml.addProduct(title, description, price, thumbnail, code, stock, status, category);
@@ -64,7 +64,7 @@ router.get("/api/products", async (req, res) => {
     }
   });
 //ACTUALIZAR PRODUCTOS 
-  router.put("/api/products/:pid",(req,res)=>{
+  router.put("/products/:pid",(req,res)=>{
     try{
         let productId = parseInt(req.params.pid);
         pml.updateProduct(productId, req.body);
@@ -75,7 +75,7 @@ router.get("/api/products", async (req, res) => {
     }
   });
 
-  router.delete("/api/products/:pid", (req,res)=>{
+  router.delete("/products/:pid", (req,res)=>{
     try{
         let productId = parseInt(req.params.pid)
         pml.deleteProduct(productId)
