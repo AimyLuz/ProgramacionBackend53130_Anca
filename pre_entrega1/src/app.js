@@ -6,7 +6,7 @@ const __dirname = getCurrentDirname(import.meta.url);
 
 import path from "path";
 import routerProducts from "./routes/products.router.js"
-//import routerCarts from "./routes/carts.router.js"
+import routerCarts from "./routes/carts.router.js"
 
 /*const ProductManager = require("./productmanager.js");
 const express = require("express");
@@ -27,7 +27,7 @@ app.use(express.urlencoded({extended:true}));
 
 
 app.use("/api", routerProducts);
-//app.use("/api", routerCarts);
+app.use("/api", routerCarts);
 
 
 

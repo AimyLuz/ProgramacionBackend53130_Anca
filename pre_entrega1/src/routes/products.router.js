@@ -16,6 +16,8 @@ const pml = new ProductManager(path.join(__dirname, "../listadoDeProductos.json"
 
 
 //esto va a ir a products router
+
+//MOSTRAR PRODUCTOS
 router.get("/products", async (req, res) => {
     try {
           // Llamado a productManager
@@ -32,11 +34,12 @@ router.get("/products", async (req, res) => {
     } catch (error) {
       // Salida
       // Manejar errores aquí
-      console.error(error);i
+      console.error(error);
       res.status(500).send("Error interno del servidor");
     }
   });
-  
+
+  //MOSTRAR PRODUCTO POR ID
   router.get("/products/:pid", async (req, res) => {
     try {
         let productId = parseInt(req.params.pid);
@@ -53,7 +56,7 @@ router.get("/products", async (req, res) => {
     }
   });
 
-  //AGREGAR PRODUCTOS
+  //AGREGAR PRODUCTO
   router.post("/products", async (req,res)=>{
     try{
         let {title, description, price, thumbnail, code, stock, status, category}= req.body;
@@ -63,7 +66,7 @@ router.get("/products", async (req, res) => {
         res.status(500).send("Error al agregar el producto")
     }
   });
-//ACTUALIZAR PRODUCTOS 
+//ACTUALIZAR PRODUCTO
   router.put("/products/:pid",(req,res)=>{
     try{
         let productId = parseInt(req.params.pid);
@@ -74,7 +77,7 @@ router.get("/products", async (req, res) => {
         res.status(500).send("Error al obtener el producto");
     }
   });
-
+//BORRAR PRODUCTO
   router.delete("/products/:pid", (req,res)=>{
     try{
         let productId = parseInt(req.params.pid)
