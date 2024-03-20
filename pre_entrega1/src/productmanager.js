@@ -3,11 +3,11 @@ import path from "path";
 /*
 const fs = require("fs");
 const path = require("path");*/
- class ProductManager {
+class ProductManager {
     constructor(archivo) {
         this.path = archivo;
         this.initProducts();
-        
+
     }
     static id = 0;
     async initProducts() {
@@ -30,7 +30,7 @@ const path = require("path");*/
             throw new Error("Error al inicializar los productos:", error);
         }
     }
-    async addProduct(title, description, price, thumbnail= [], code, stock, status, category) {
+    async addProduct(title, description, price, thumbnail = [], code, stock, status, category) {
         try {
             let colecciones = this.products;
             if (colecciones.some((i) => i.code === code)) {
@@ -51,15 +51,16 @@ const path = require("path");*/
             });
             await fs.promises.writeFile(this.path, JSON.stringify(colecciones));
             this.products = colecciones; // Actualizar this.products
+            return { status: true, msg: "Producto agregado exitosamente" };
         } catch (error) {
-            throw new Error("Error al agregar el producto:", error);
+            return { status: false, msg: "Error al agregar el producto: " + error.message };
         }
     }
-    
+
     async getProduct() {
-        try{
+        try {
             return JSON.parse(await fs.promises.readFile(this.path, "utf-8"))
-        }catch(error){
+        } catch (error) {
             throw new Error("Error al intentar mostrar productos:", error)
         };
 
@@ -70,6 +71,7 @@ const path = require("path");*/
             const producto = this.products.find((producto) => producto.id == id);
             if (!producto) {
                 console.log(`Producto con ID "${id}" no encontrado, intente con otro ID`);
+                return { status: false, msg: "Error al intentar encontrar el producto: " + error.message };
             } else {
                 console.log(producto);
                 return producto;
@@ -78,35 +80,40 @@ const path = require("path");*/
             throw new Error("Error al intentar mostrar el producto:", error);
         }
     }
-    
-   async deleteProduct(id) {
-        try{
+
+    async deleteProduct(id) {
+        try {
             if (!this.products.find((producto) => producto.id == id)) {
-                return console.log(`Producto con ID "${id}" no encontrado, intente con otro ID`)}
-           
-                let colecciones = JSON.parse(await fs.promises.readFile(this.path, "utf-8"));
-                let listaNueva = colecciones.filter((i) => i.id !== id);
-                await fs.promises.writeFile(this.path, JSON.stringify(listaNueva));
-                console.log(`Producto ${id} eliminado`)
-        }catch(error){
-            throw new Error("Error al intentar borrar el producto:", error)
-        }
-       
-        
-    }
-   async updateProduct(id, campo, valor){
-        try{
+                return console.log(`Producto con ID "${id}" no encontrado, intente con otro ID`)
+            }
+
             let colecciones = JSON.parse(await fs.promises.readFile(this.path, "utf-8"));
-        let numeroIndex = colecciones.findIndex((i)=> i.id == id);
-    if(numeroIndex === -1){
-        return console.log(`Not Found id: ${id}`)
+            let listaNueva = colecciones.filter((i) => i.id !== id);
+            await fs.promises.writeFile(this.path, JSON.stringify(listaNueva));
+            return { status: true, msg: `Producto con ID ${id} eliminado correctamente` };
+        } catch (error) {
+            return { status: false, msg: "Error al intentar borrar el producto: " + error.message };
+        }
     }
-    colecciones[numeroIndex][campo] = valor;
-    await fs.promises.writeFile(this.path, JSON.stringify(colecciones))
-    this.products = colecciones;
-    console.log(`Producto ${id} elditado`)
-        }catch(error){
-            throw new Error("Error al intentar modificar el producto:", error)
+    async updateProduct(id, campo, valor) {
+        try {
+            const camposValidos = ["title", "description", "price", "thumbnail", "code", "stock", "status", "category"];
+            // Verificar si el campo proporcionado es válido
+            if (!camposValidos.includes(campo)) {
+                return { status: false, msg: `Campo "${campo}" no válido` };
+            }    
+            let colecciones = JSON.parse(await fs.promises.readFile(this.path, "utf-8"));
+            let numeroIndex = colecciones.findIndex((i) => i.id == id);
+            if (numeroIndex === -1) {
+                return { status: false, msg: `Producto con ID ${id} no encontrado` };
+            }
+
+            colecciones[numeroIndex][campo] = valor;
+            await fs.promises.writeFile(this.path, JSON.stringify(colecciones))
+            this.products = colecciones;
+            return { status: true, msg: `Producto con ID ${id} actualizado correctamente` };
+        } catch (error) {
+            return { status: false, msg: "Error al intentar modificar el producto: " + error.message };
         }
     }
 };

@@ -3,7 +3,6 @@ import express from "express";
 import path from "path";
 import CartManager from "../cartmanager.js";
 import { getCurrentDirname } from '../utils.js'; // Importa solo la función getCurrentDirname
-
 const __dirname = getCurrentDirname(import.meta.url);
 const router = express.Router();
 
@@ -13,10 +12,14 @@ const cm = new CartManager("./src/carrito.json");
 //Comenzar carrito nuevo 
 router.post("/carts", async (req,res)=>{
     try{
-        cm.addCart(req.body);
-        res.status(200).send("Se agregó correctamente el carrito");
+        const respuesta = await cm.addCart(req.body);
+        if (respuesta.status) {
+            res.status(200).send(respuesta);
+        } else {
+            res.status(400).send(respuesta);
+        }
     }catch(error){
-        res.status(500).send("Error al agregar el producto");
+        res.status(500).send("Error interno del servidor: " + error.message);
     }
 });
 
@@ -25,10 +28,14 @@ router.post("/carts/:cid/product/:pid", async (req,res)=>{
     try{
         const cartId = parseInt(req.params.cid);
 		const productId = parseInt(req.params.pid);
-		cm.updateCart(cartId, productId);
-		res.status(200).send("Producto añadido al carrito");
+        const respuesta = await cm.addProductToCart(cartId, productId);
+        if (respuesta.status) {
+            res.status(200).send(respuesta);
+        } else {
+            res.status(400).send(respuesta);
+        }
     }catch(error){
-        res.status(500).send("Error al cargar el producto");
+        res.status(500).send("Error interno del servidor: " + error.message);
     }
 });
 
@@ -50,10 +57,14 @@ router.get("/carts/:cid", async (req,res)=>{
         const carritoId = parseInt(req.params.cid);
         console.log(parseInt(req.params.cid));
         const traerCarrito = await cm.getCartById(carritoId);
-        res.send(traerCarrito);
+        if(traerCarrito){
+            res.json({ status: true, traerCarrito });
+        }else{
+            res.status(404).json({ status: false, msg: "Carrito no encontrado" });
+        }
     }catch(error){
         console.error(error.message); 
-        res.status(404).send("Producto no encontrado"); 
+        res.status(500).json({ status: false, msg: "Error al obtener carrito" });
     }
 });
 
@@ -62,22 +73,16 @@ router.get("/carts/:cid", async (req,res)=>{
 router.delete("/carts/:cid", async (req,res)=>{
     try{
     const cartId = parseInt(req.params.cid);
-    cm.deleteCart(cartId)
-    res.status(200).send("Carrito ELiminado")
+    const respuesta = await cm.deleteCart(cartId)
+    if (respuesta.status) {
+        res.status(200).json(respuesta);
+    } else {
+        res.status(400).json(respuesta);
+    }
     }catch(error){
-        res.status(500).send("Error al eliminar el carrito");
+        res.status(500).json({ status: false, msg: "Carrito no encontrado: " + error.message });
     }
 });
 
-//Borrar producto del carrito
-router.delete("/carts/:cid/products/:pid", (req,res)=>{
-    try{
-        let productId = parseInt(req.params.pid)
-        pml.deleteProduct(productId)
-        res.status(200).send("Producto eliminado");
-    }catch(error){
-        res.status(500).send("Error al eliminar el producto");
-    }
-  });
 export default router;
 

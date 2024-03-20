@@ -3,10 +3,6 @@ import path from "path";
 import ProductManager  from "../productmanager.js";
 import { getCurrentDirname } from '../utils.js'; // Importa solo la función getCurrentDirname
 const __dirname = getCurrentDirname(import.meta.url);
-/*
-const express = require('express');
-const path = require("path");
-const ProductManager = require('../productmanager');*/
 
 
 const router = express.Router();
@@ -29,7 +25,7 @@ router.get("/products", async (req, res) => {
       } else if (Number.isInteger(Number(limit)) && Number(limit) > 0) {
         res.send(productList.slice(0, limit)); //transformar en numero el string y enviar el limit
       } else {
-        res.send(`El límite ${limit} es inválido.`);//ingreso de datos no validos
+        res.status(400).json({ status: false, msg: `El límite ${limit} es inválido.` });//ingreso de datos no validos
       }
     } catch (error) {
       // Salida
@@ -45,14 +41,17 @@ router.get("/products", async (req, res) => {
         let productId = parseInt(req.params.pid);
         console.log(parseInt(req.params.pid));
       // Llamado a productManager
-  
       let productList =  await pml.getProductById(productId);
       // Salida
-      res.send(productList);
+      if (productList) {
+        res.json({ status: true, productList });
+    } else {
+        res.status(404).json({ status: false, msg: "Producto no encontrado" });
+    }
     } catch (error) {
-      // Manejar errores aquí
-      console.error(error.message); // Imprime el mensaje de error en la consola
-      res.status(404).send("Producto no encontrado"); // Envía una respuesta 404 al cliente
+      // Manejar errores 
+      console.error(error.message); 
+      res.status(500).json({ status: false, msg: "Error al obtener el producto" }); // Envía una respuesta 404 al cliente
     }
   });
 
@@ -60,33 +59,52 @@ router.get("/products", async (req, res) => {
   router.post("/products", async (req,res)=>{
     try{
         let {title, description, price, thumbnail, code, stock, status, category}= req.body;
-        pml.addProduct(title, description, price, thumbnail, code, stock, status, category);
-        res.status(200).send("Producto agregado con exito");
+       const respuesta = await pml.addProduct(title, description, price, thumbnail, code, stock, status, category);
+       if (respuesta.status) {
+       return res.status(200).json(respuesta)
+       } else {
+        res.status(400).json(respuesta)}
+       //res.status(201).json({ status: true, msg: "Producto agregado exitosamente" });
     }catch (error){
-        res.status(500).send("Error al agregar el producto")
+      res.status(400).json({ status: false, msg: "Error al agregar el producto" });
     }
   });
 //ACTUALIZAR PRODUCTO
-  router.put("/products/:pid",(req,res)=>{
-    try{
-        let productId = parseInt(req.params.pid);
-        pml.updateProduct(productId, req.body);
-        res.status(200).send("Producto actualizado");
+router.put("/products/:pid", async (req, res) => {
+  try {
+      let productId = parseInt(req.params.pid);
+      const { campo, valor } = req.body;
+      const respuesta = await pml.updateProduct(productId, campo, valor);
+      if (respuesta.status) {
+          res.status(200).json(respuesta);
+      } else {
+          res.status(400).json(respuesta);
+      }
+  } catch (error) {
+      res.status(500).json({ status: false, msg: "Error interno del servidor: " + error.message });
+  }
+});
+/*
+PARA ACTUALIZAR EL PRODUCTO SE ESCRIBE CON EL SIGUIENTE FORMATO:
+{
+    "campo": "price",
+    "valor": 2222
+}
+*/
 
-    }catch(error){
-        res.status(500).send("Error al obtener el producto");
-    }
-  });
 //BORRAR PRODUCTO
-  router.delete("/products/:pid", (req,res)=>{
+  router.delete("/products/:pid",async (req,res)=>{
     try{
         let productId = parseInt(req.params.pid)
-        pml.deleteProduct(productId)
-        res.status(200).send("Producto eliminado");
-    }catch(error){
-        res.status(500).send("Error al eliminar el producto");
+        const respuesta = await pml.deleteProduct(productId);
+        if (respuesta.status) {
+            res.status(200).json(respuesta);
+        } else {
+            res.status(400).json(respuesta);
+        }
+    } catch (error) {
+        res.status(500).json({ status: false, msg: "Producto no encontrado: " + error.message });
     }
   });
 
 export default router;
-//module.exports = router;
