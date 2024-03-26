@@ -63,7 +63,7 @@ io.on('connection', async (socket) => {
     socket.emit('products', initialProducts);
   } catch (error) {
     console.error('Error al obtener productos iniciales:', error.message);
-    socket.emit('error');
+    socket.emit('error', { message: 'Error al obtener productos iniciales' });
   }
 
   // Escucho evento para agregar producto
@@ -74,11 +74,11 @@ io.on('connection', async (socket) => {
       const updatedProducts = { products: await pml.getProduct() };
       console.log('Productos actualizados enviados:', updatedProducts);
       io.emit('products', updatedProducts);
-      socket.emit('success');
+      socket.emit('success', { message: 'Producto agregado exitosamente' });
     } catch (error) {
       // Si hay un fallo al agregar el producto se envía evento de error 
       console.error('Error al agregar el producto:', error.message);
-      socket.emit('error');
+      socket.emit('error', { message: 'Error al agregar el producto' });
     }
   });
 });
