@@ -1,9 +1,9 @@
-import  ProductManager  from "./productmanager.js";
+import path from "path";
+import  ProductManager  from "./controllers/productmanager.js";
 import express from "express";
 //import multer from "multer"
 import { getCurrentDirname } from './utils.js'; // Importa solo la función getCurrentDirname
 const __dirname = getCurrentDirname(import.meta.url);
-import path from "path";
 import routerProducts from "./routes/products.router.js"
 import routerCarts from "./routes/carts.router.js"
 import { Server } from "socket.io";
@@ -13,7 +13,12 @@ import viewsRouter from "./routes/views.router.js";
 
 const app = express();
 const PUERTO = 8080;
-const pml = new ProductManager(path.join(__dirname, "./listadoDeProductos.json"));
+// Rutas de archivos JSON
+const productsJSONPath = path.join(__dirname, "./models/listadoDeProductos.json");
+
+const pml = new ProductManager(productsJSONPath);
+//const cm = new CartManager(cartJSONPath);
+
 /* --------ESCUCHANDO ---------- */
 const httpServer = app.listen(PUERTO, () => {
   console.log(`Esuchando en el puerto: ${PUERTO}`);
@@ -56,33 +61,31 @@ app.get('/', (req, res)=>{
 /* --------------------SOCKET CONNECTION----------------------- */
 io.on('connection', async (socket) => {
   console.log('Nuevo cliente conectado');
-  try {
-    // Emitir productos al cliente cuando se conecta
-    const initialProducts = { products: await pml.getProduct() };
-    console.log('Productos iniciales enviados:', initialProducts);
-    socket.emit('products', initialProducts);
-  } catch (error) {
-    console.error('Error al obtener productos iniciales:', error.message);
-    socket.emit('error', { message: 'Error al obtener productos iniciales' });
-  }
+    //Enviamos el array de productos al cliente: 
+    socket.emit("productos", await pml.getProduct());
+
+    //Recibimos el evento "eliminarProducto" desde el cliente: 
+    socket.on("eliminarProducto", async (id) => {
+        await pml.deleteProduct(id);
+        //Enviamos el array de productos actualizados: 
+        socket.emit("productos", await pml.getProduct());
+    })
 
   // Escucho evento para agregar producto
   socket.on('add_product', async (producto) => {
-    try {
-      // Si se agrega el producto se envía evento de confirmación
+      const newProduct = await pml.addProduct(producto)
+      if(newProduct) {
+      socket.emit('success', {message: 'Producto agregado'});
+      } else {
+      socket.emit('error', { message: 'Error al agregar el producto' })}
+  });
+});
+      /*
       await pml.addProduct(producto);
       const updatedProducts = { products: await pml.getProduct() };
       console.log('Productos actualizados enviados:', updatedProducts);
       io.emit('products', updatedProducts);
-      socket.emit('success', { message: 'Producto agregado exitosamente' });
-    } catch (error) {
-      // Si hay un fallo al agregar el producto se envía evento de error 
-      console.error('Error al agregar el producto:', error.message);
-      socket.emit('error', { message: 'Error al agregar el producto' });
-    }
-  });
-});
-
+      socket.emit('success', { message: 'Producto agregado exitosamente' });*/
 /*
 //---------------- MULTER --------------------------- 
 const storage = multer.diskStorage({

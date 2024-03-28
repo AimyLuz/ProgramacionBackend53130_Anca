@@ -3,6 +3,7 @@ const products = [{ stock: 0 }, { stock: 1 }]
 const form = document.getElementById('addProduct')
 const catalogue = document.getElementById('catalogue')
 
+
 socket.on('connect', () => {
     console.log('Conexión establecida con el servidor');
   });
@@ -22,7 +23,6 @@ form.addEventListener('submit', ev => {
   socket.emit('add_product', newProduct)
   form.reset()
 })
-
 
 //Escucho evento para renderizar lista de productos
 socket.on('products', (data) => {
@@ -63,7 +63,9 @@ socket.on('error', () => {
     console.log('no se agrego')
   Swal.fire({
     title: 'Ups!',
-    text: "Ya existe un producto con ese código",
+    text: "No se pudo agregar el producto",
     icon: 'error'
   });
 })
+
+

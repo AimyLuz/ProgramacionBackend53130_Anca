@@ -1,8 +1,7 @@
 import fs from "fs";
 import path from "path";
-/*
-const fs = require("fs");
-const path = require("path");*/
+
+
 class ProductManager {
     constructor(archivo) {
         this.path = archivo;
@@ -12,6 +11,7 @@ class ProductManager {
     static id = 0;
     async initProducts() {
         try {
+            console.log("Ruta del archivo:", this.path); // Agregar esta línea para imprimir la ruta del archivo
             // Verificar si el archivo existe
             const fileExists = fs.existsSync(this.path);
             if (!fileExists) {
@@ -32,7 +32,7 @@ class ProductManager {
     }
     async addProduct(title, description, price, thumbnail = [], code, stock, status, category) {
         try {
-            let colecciones = this.products;
+            let colecciones = [...this.products];
             if (colecciones.some((i) => i.code === code)) {
                 console.log(`Error, el code ${code} está repetido.`);
                 return; // Retorno temprano si el código está repetido

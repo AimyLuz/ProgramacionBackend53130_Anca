@@ -1,12 +1,13 @@
 
 import express from "express";
 import path from "path";
-import CartManager from "../cartmanager.js";
+import CartManager from "../controllers/cartmanager.js";
 import { getCurrentDirname } from '../utils.js'; // Importa solo la función getCurrentDirname
 const __dirname = getCurrentDirname(import.meta.url);
 const router = express.Router();
 
-const cm = new CartManager("./src/carrito.json");
+const carritosJSONPath = path.join(__dirname, "../models/carrito.json");
+const cm = new CartManager(carritosJSONPath);
 
 
 //Comenzar carrito nuevo 

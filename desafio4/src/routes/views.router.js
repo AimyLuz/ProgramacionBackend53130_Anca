@@ -1,13 +1,15 @@
 import express from "express";
 import path from "path";
-import ProductManager  from "../productmanager.js";
+import ProductManager  from "../controllers/productmanager.js";
 import { getCurrentDirname } from '../utils.js'; // Importa solo la función getCurrentDirname
 const __dirname = getCurrentDirname(import.meta.url);
 
 
 const router = express.Router();
 
-const pml = new ProductManager(path.join(__dirname, "../listadoDeProductos.json"));
+const productsJSONPath = path.join(__dirname, "../models/listadoDeProductos.json");
+const pml = new ProductManager(productsJSONPath);
+
 
 router.get("/",  async (req, res) => {
     try {
