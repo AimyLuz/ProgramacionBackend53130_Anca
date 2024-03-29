@@ -73,6 +73,7 @@ io.on('connection', async (socket) => {
 
   // Escucho evento para agregar producto
   socket.on('add_product', async (producto) => {
+    console.log(producto)
       const newProduct = await pml.addProduct(producto)
       if(newProduct) {
       socket.emit('success', {message: 'Producto agregado'});
@@ -80,12 +81,7 @@ io.on('connection', async (socket) => {
       socket.emit('error', { message: 'Error al agregar el producto' })}
   });
 });
-      /*
-      await pml.addProduct(producto);
-      const updatedProducts = { products: await pml.getProduct() };
-      console.log('Productos actualizados enviados:', updatedProducts);
-      io.emit('products', updatedProducts);
-      socket.emit('success', { message: 'Producto agregado exitosamente' });*/
+
 /*
 //---------------- MULTER --------------------------- 
 const storage = multer.diskStorage({

@@ -13,6 +13,7 @@ form.addEventListener('submit', ev => {
   ev.preventDefault()
   const newProduct = {
     title: ev.target.title.value,
+    thumbnail: ev.target.thumbnail.value,
     description: ev.target.description.value,
     code: ev.target.code.value,
     price: ev.target.price.value,
