@@ -63,7 +63,7 @@ router.get("/products", async (req, res) => {
   router.post("/products", async (req,res)=>{
     try{
         let {title, description, price, thumbnail, code, stock, status, category}= req.body;
-       const respuesta = await pml.addProduct(title, description, price, thumbnail, code, stock, status, category);
+       const respuesta = await pml.addProduct({title, description, price, thumbnail, code, stock, status, category});
        if (respuesta.status) {
        return res.status(200).json(respuesta)
        } else {

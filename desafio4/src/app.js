@@ -73,6 +73,9 @@ io.on('connection', async (socket) => {
 
   // Escucho evento para agregar producto
   socket.on('add_product', async (producto) => {
+    if (!Array.isArray(producto.thumbnail)) {
+      producto.thumbnail = [producto.thumbnail];
+  }
     console.log(producto)
       const newProduct = await pml.addProduct(producto)
       if(newProduct) {

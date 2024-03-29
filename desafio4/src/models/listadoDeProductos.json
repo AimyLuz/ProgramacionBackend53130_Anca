@@ -178,5 +178,29 @@
         "status": true,
         "category": "trompetas",
         "id": 12
+    },
+    {
+        "title": "Eufonio",
+        "description": "producto agregado desde el form",
+        "price": "2000000",
+        "thumbnail": ["https://http2.mlstatic.com/D_NQ_NP_620247-MLA74644762584_022024-O.webp"],
+        "code": "aaa012",
+        "stock": "20",
+        "status": "true",
+        "category": "vientos",
+        "id": 13
+    },
+    {
+        "title": "Viola",
+        "description": "producto agregado desde el form2",
+        "price": "100000",
+        "thumbnail": [
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Bratsche.jpg/159px-Bratsche.jpg"
+        ],
+        "code": "aaa013",
+        "stock": "20",
+        "status": "true",
+        "category": "cuerdas",
+        "id": 14
     }
 ]

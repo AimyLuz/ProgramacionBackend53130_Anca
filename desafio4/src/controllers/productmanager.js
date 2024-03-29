@@ -30,7 +30,7 @@ class ProductManager {
             throw new Error("Error al inicializar los productos:", error);
         }
     }
-    async addProduct(title, description, price, thumbnail = [], code, stock, status, category) {
+    async addProduct({title, description, price, thumbnail = [], code, stock, status, category}) {
         try {
             let colecciones = [...this.products];
             if (colecciones.some((i) => i.code === code)) {
