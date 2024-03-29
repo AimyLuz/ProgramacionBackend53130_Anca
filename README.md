@@ -14,8 +14,8 @@
 
 ## Primer Pre entrega : 
     Entregado: ✅
-    Aprobado:  
+    Aprobado:  ✅(4 puntos u.u )
 
 ### Desafío 4 : 
-    Entregado: 
+    Entregado: ✅
     Aprobado:  
