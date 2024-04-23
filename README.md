@@ -18,4 +18,8 @@
 
 ### Desafío 4 : 
     Entregado: ✅
+    Aprobado:  ✅
+
+###  Practica Integradora : 
+    Entregado: ✅
     Aprobado:  
