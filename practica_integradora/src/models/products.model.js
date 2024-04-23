@@ -1,0 +1,42 @@
+import mongoose from "mongoose";
+
+//Definimos el esquema : "schema"
+const productsSchema = new mongoose.Schema({
+    title:{
+        type:String,
+        required:true
+    },
+    description: {
+        type:String,
+        required:true
+    },
+    price: {
+        type:Number,
+        required:true
+    },
+    thumbnail:{
+        type:[String]
+    },
+    code: {
+        type:String,
+        required:true
+    },
+    stock:{
+        type:Number,
+        required:true
+    },
+    status:{
+        type:Boolean,
+        required:true
+    },
+    category:{
+        type:String,
+        required:true
+    }
+});
+
+//Definimos el modelo
+
+const ProductsModel = mongoose.model("products", productsSchema);
+
+export default ProductsModel;
