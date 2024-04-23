@@ -33,7 +33,7 @@ class ProductManager {
 
     async getProduct() {
         try {
-            const productos = await ProductsModel.find();
+            const productos = await ProductsModel.find().lean();
            return productos;
         } catch (error) {
             return { status: false, msg: "Error al obtener la lista de productos: " + error.message };
