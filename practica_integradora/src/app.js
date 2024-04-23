@@ -51,7 +51,7 @@ console.log("Mensaje recibido", data)
       //Obtengo los mensajes de MongoDB y se los paso al cliente: 
       const messages = await MessageModel.find();
       console.log(messages);
-      io.sockets.emit("messageLogs", messages);
+      io.sockets.emit("messagesLogs", messages);
    
   })
 })

@@ -6,7 +6,7 @@ import ProductsModel from "../models/products.model.js";
 
 router.get("/",  async (req, res) => {
     try {
-        const productList = await ProductsModel.find(); // Obtén todos los productos
+        const productList = await pm.getProduct(); // Obtén todos los productos
         res.render("home", { products: productList }); // Pasa el arreglo de productos a la vista
       } catch (error) {
         console.error("Error al obtener productos:", error);

@@ -67,7 +67,7 @@ class CartManager{
             }
             return {
                 status: true,
-                cart: carts,
+                cart: cart,
                 msg:'Carritos'
             };
         } catch (error) {

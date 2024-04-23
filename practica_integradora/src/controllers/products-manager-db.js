@@ -39,7 +39,8 @@ class ProductManager {
             return { status: false, msg: "Error al obtener la lista de productos: " + error.message };
         };
 
-    }
+    };
+    
     async getProductById(id) {
         try {
             const producto = await ProductsModel.findById(id);

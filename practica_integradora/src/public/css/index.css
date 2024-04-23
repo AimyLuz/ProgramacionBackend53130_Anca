@@ -28,7 +28,9 @@ form input {
     border-style: inset;
     border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
 }
-
+.card-text{
+    color: black;
+}
 p{
     color: aliceblue;
 }
