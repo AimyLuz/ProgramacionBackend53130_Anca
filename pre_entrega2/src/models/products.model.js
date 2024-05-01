@@ -1,4 +1,6 @@
+//products.model.js
 import mongoose from "mongoose";
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 //Definimos el esquema : "schema"
 const productsSchema = new mongoose.Schema({
@@ -34,6 +36,8 @@ const productsSchema = new mongoose.Schema({
         required:true
     }
 });
+
+productsSchema.plugin(mongoosePaginate); // Aplica el plugin de paginación
 
 //Definimos el modelo
 

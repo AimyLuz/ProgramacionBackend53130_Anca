@@ -1,3 +1,5 @@
+//products-manager-db.js
+
 import ProductsModel from "../models/products.model.js";
 
 class ProductManager {
@@ -30,8 +32,46 @@ class ProductManager {
             return { status: false, msg: "Error al agregar el producto: " + error.message };
         }
     }
+    
+    async getProducts({ limit = 10, page = 1, sort, query } = {}) {
+        try {
+            const options = {
+              page,
+              limit,
+              lean: true, // Devuelve objetos JavaScript "planos"
+            };
+      
+            if (sort) {
+              options.sort = { price: sort === 'asc' ? 1 : -1 };
+            }
+      
+            if (query) {
+              options.query = { category: query };
+            }
+      
+            const productList = await ProductsModel.paginate({}, options);
+      
+            return productList; // Devuelve directamente el resultado de paginación
+          } catch (error) {
+            console.error("Error al obtener productos:", error);
+            throw error;
+          }
+    }
 
-    async getProduct() {
+    /*async getProduct({ page = 1, limit = 2 }) {
+        try {
+          const options = {
+            page: parseInt(page),
+            limit: parseInt(limit),
+            lean: true, // para obtener objetos JavaScript "planos"
+          };
+          const productos = await ProductsModel.paginate({}, options); // usando paginación
+          return productos; // debería tener una propiedad 'docs' que es un array
+        } catch (error) {
+          throw new Error("Error al obtener la lista de productos: " + error.message);
+        }
+      }*/
+   /* async getProduct() {
         try {
             const productos = await ProductsModel.find().lean();
            return productos;
@@ -40,7 +80,7 @@ class ProductManager {
         };
 
     };
-    
+    */
     async getProductById(id) {
         try {
             const producto = await ProductsModel.findById(id);

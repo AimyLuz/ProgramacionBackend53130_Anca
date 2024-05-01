@@ -1,9 +1,15 @@
+//views.router.js
+
 import express from "express";
 const router = express.Router(); 
 import ProductManager from "../controllers/products-manager-db.js";
+import CartManager from "../controllers/carts-manager-db.js";
 const pm = new ProductManager();
+const cm = new CartManager();
 import ProductsModel from "../models/products.model.js";
 
+
+/* ahora se en los productos en la ruta "/products"
 router.get("/",  async (req, res) => {
     try {
         const productList = await pm.getProduct(); // Obtén todos los productos
@@ -12,37 +18,32 @@ router.get("/",  async (req, res) => {
         console.error("Error al obtener productos:", error);
         res.status(500).send("Error interno del servidor");
       }
-});
-router.get("/products",  async (req, res) => {
+});*/
+router.get("/products", async (req, res) => {
   try {
-    const { page = 1, limit = 2 } = req.query;
-    const productList = await pm.getProduct({
-       page: parseInt(page),
-       limit: parseInt(limit)
-    });
+    const { page = 1, limit = 2, sort, query } = req.query; // Incluye query y sort
+    const productList = await pm.getProducts({ page: parseInt(page), limit: parseInt(limit), sort, query });
 
-    const nuevoArray = productList.docs.map(producto => {
-       const { _id, ...rest } = producto.toObject();
-       return rest;
-    });
+    if (!productList || !productList.docs || !Array.isArray(productList.docs)) {
+      throw new Error("Lista de productos no es válida");
+    }
 
     res.render("home", {
-       products: nuevoArray,
-       hasPrevPage: productList.hasPrevPage,
-       hasNextPage: productList.hasNextPage,
-       prevPage: productList.prevPage,
-       nextPage: productList.nextPage,
-       currentPage: productList.page,
-       totalPages: productList.totalPages
+      products: productList.docs, // Muestra los productos
+      hasPrevPage: productList.hasPrevPage,
+      hasNextPage: productList.hasNextPage,
+      prevPage: productList.prevPage,
+      nextPage: productList.nextPage,
+      currentPage: productList.page,
+      totalPages: productList.totalPages,
     });
-
- } catch (error) {
-    console.error("Error al obtener productos", error);
+  } catch (error) {
+    console.error("Error al obtener productos:", error.message);
     res.status(500).json({
-       status: 'error',
-       error: "Error interno del servidor"
+      status: "error",
+      error: "Error interno del servidor",
     });
- }
+  }
 });
 
 router.get("/socket", async (req, res) => {
