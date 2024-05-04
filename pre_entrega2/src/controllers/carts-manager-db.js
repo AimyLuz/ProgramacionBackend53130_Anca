@@ -1,7 +1,7 @@
 //carts-manager-db.js
 import mongoose from 'mongoose';
 import CartsModel from "../models/carts.model.js";
-
+import ProductsModel from '../models/products.model.js';
 class CartManager{
     async addCart() {
         try {
@@ -67,11 +67,18 @@ class CartManager{
     };
     async getCartById(cartId) {
         try {
-            const cart = await CartsModel.findById(cartId);
+            if (!mongoose.Types.ObjectId.isValid(cartId)) { // Verificar que `cartId` sea válido
+                return null;
+              }
+
+              if (!ProductsModel) {
+                console.error("El modelo 'Product' no está registrado");
+            }
+            const cart = await CartsModel.findById(cartId).populate('products.product'); 
 
             if(!cart) {
                 return { status: false, msg: "No hay carritos con ese ID: " + error.message }
-                return null; 
+                
             }
             return {
                 status: true,
@@ -79,6 +86,8 @@ class CartManager{
                 msg:'Carritos'
             };
         } catch (error) {
+            console.error("Error en getCartById:", error);
+
             return { status: false, msg: "Error al intentar mostrar el carrito: " + error.message }
 
         }
