@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
         const limit = req.query.limit;
 
         // Llamar al ProductManager para obtener productos
-        const productList = await pm.getProduct();
+        const productList = await pm.getProducts();
         
         // Extraer el límite de la consulta
 
