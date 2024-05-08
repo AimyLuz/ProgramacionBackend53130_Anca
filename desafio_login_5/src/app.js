@@ -9,7 +9,9 @@ import productsRouter from "./routes/products.router.js";
 import viewsRouter from "./routes/views.router.js"
 import MessageModel from "./models/mesagge.model.js";
 import MongoStore from "connect-mongo";
-//import session y user
+import session from "express-session";
+import userRouter from "./routes/user.router.js";
+import sessionRouter from "./routes/session.router.js";
 
 
 const app = express();
@@ -23,8 +25,7 @@ app.use(express.static("./src/public"));
 app.use(session({
   store:MongoStore.create({
     mongoUrl:"mongodb+srv://aimyluz:coderhouse@cluster0.5qf0kec.mongodb.net/Ecommerce?retryWrites=true&w=majority&appName=Cluster0",
-    mongoOptions:{userNewUrlParser:true,useUnifiedTopology:true},
-    ttl:15,
+    ttl:100,
   }),
   secret:"secretCoder",
   resave: true, 
@@ -40,9 +41,9 @@ app.set("views", "./src/views");
 //Rutas: 
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use("/api/users", userRouter);
+app.use("/api/sessions", sessionRouter);
 app.use("/", viewsRouter);
-//app.use("/api/users", userRouter);
-//app.use("/api/sessions", sessionRouter);
 
 
 

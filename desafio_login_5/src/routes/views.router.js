@@ -2,6 +2,7 @@
 
 import express from "express";
 const router = express.Router(); 
+
 import ProductManager from "../controllers/products-manager-db.js";
 import CartManager from "../controllers/carts-manager-db.js";
 const pm = new ProductManager();
@@ -45,6 +46,7 @@ router.get("/products", async (req, res) => {
     }
 
     res.render("products", {
+      user: req.session.user,
       products: productList.docs, // Muestra los productos
       hasPrevPage: productList.hasPrevPage,
       hasNextPage: productList.hasNextPage,
@@ -118,7 +120,20 @@ router.get("/socket", async (req, res) => {
     res.render("chat");
  })
  
-
+router.get("/login", (req,res)=>{
+  res.render("login");
+});
+router.get("/register", (req,res)=>{
+  res.render("register");
+});
+router.get("/profile", (req,res)=>{
+  if(!req.session.login){
+    return res.redirect("/login")
+  }else {
+    res.render("profile");
+  }
+  
+});
 
 
 

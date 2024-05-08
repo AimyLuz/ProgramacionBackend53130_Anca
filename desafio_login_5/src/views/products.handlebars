@@ -1,5 +1,14 @@
+  {{#if user}}
+  <div class="container text-center">
+    <h1>¡Bienvenidx, {{user.first_name}} {{user.last_name}} a Arrabal Music Store!</h1>
+    <p>Rol: {{user.role}} </p>
+    <a href="/api/sessions/logout">Logout</a>
+  </div>
+  <br>
+{{/if}}
 <div class="container text-center">
-  <h1 class="my-4">Lista de Productos</h1>
+  <h2 class="my-4">Lista de Productos</h2>
+    <br>
 </div>
 
 <div class="container">
