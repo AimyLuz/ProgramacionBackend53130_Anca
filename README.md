@@ -29,5 +29,5 @@
     Aprobado:  ✅
 
 ### Desafío 6 : 
-    Entregado: 
+    Entregado: ✅
     Aprobado:  
