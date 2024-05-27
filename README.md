@@ -22,12 +22,16 @@
 
 ###  Practica Integradora : 
     Entregado: ✅
-    Aprobado:  
+    Aprobado:  ✅
 
 ### Desafío 5 : 
     Entregado: ✅
     Aprobado:  ✅
 
 ### Desafío 6 : 
+    Entregado: ✅
+    Aprobado:  ✅
+
+###  Practica Integradora : 
     Entregado: ✅
     Aprobado:  
