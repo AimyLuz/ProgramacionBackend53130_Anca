@@ -34,4 +34,8 @@
 
 ###  Practica Integradora : 
     Entregado: ✅
+    Aprobado:  ✅
+
+### Desafío 7 : 
+    Entregado: 
     Aprobado:  
