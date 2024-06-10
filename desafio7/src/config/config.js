@@ -1,3 +1,5 @@
+//src/config/config.js
+
 //Instalamos una dependencia para manejar las variables de entorno: 
 //npm i dotenv
 

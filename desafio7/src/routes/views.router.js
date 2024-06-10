@@ -1,19 +1,19 @@
 //views.router.js
 
 import express from "express";
+import ProductsController from "../controllers/products.controller.js";
 const router = express.Router(); 
+const pc = new ProductsController();
 
-import ProductManager from "../controllers/products-manager-db.js";
+
 import CartManager from "../controllers/carts-manager-db.js";
-const pm = new ProductManager();
 const cm = new CartManager();
-import ProductsModel from "../models/products.model.js";
 
 
 router.get("/", async (req, res) => {
   try {
     const { page = 1, limit = 2, sort, query } = req.query; // Incluye query y sort
-    const productList = await pm.getProducts({ page: parseInt(page), limit: parseInt(limit), sort, query });
+    const productList = await pc.getProducts({ page: parseInt(page), limit: parseInt(limit), sort, query });
 
     if (!productList || !productList.docs || !Array.isArray(productList.docs)) {
       throw new Error("Lista de productos no es válida");
@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
 router.get("/products", async (req, res) => {
   try {
     const { page = 1, limit = 2, sort, query } = req.query; // Incluye query y sort
-    const productList = await pm.getProducts({ page: parseInt(page), limit: parseInt(limit), sort, query });
+    const productList = await pc.getProducts({ page: parseInt(page), limit: parseInt(limit), sort, query });
 
     if (!productList || !productList.docs || !Array.isArray(productList.docs)) {
       throw new Error("Lista de productos no es válida");
@@ -110,7 +110,7 @@ router.get("/socket", async (req, res) => {
 
   router.get("/realTimeProducts", async (req, res) => {
     try{
-        const products = await pm.getProduct();
+        const products = await pc.getProduct();
         res.render("realTimeProducts", { products:products });
     }catch(error){
         res.status(500).json({error: "Error interno del servidor"})

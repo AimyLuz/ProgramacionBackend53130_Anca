@@ -14,26 +14,34 @@ import userRouter from "./routes/user.router.js";
 //import sessionRouter from "./routes/session.router.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
-
+import UsersModel from "./models/users.model.js";
+import mongoose from "mongoose";
+//clase25
+import configObject from "./config/config.js";
+import cors from "cors"; //para unir front con back
 
 
 const app = express();
-const PUERTO = 8080;
+//const PUERTO = 8080;
+const { mongo_url, puerto } = configObject;
+
+
 
 //Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
+app.use(cors());
 //Session
 app.use(session({
   store:MongoStore.create({
-    mongoUrl:"mongodb+srv://aimyluz:coderhouse@cluster0.5qf0kec.mongodb.net/Ecommerce?retryWrites=true&w=majority&appName=Cluster0",
-    ttl:100,
+    mongoUrl:mongo_url,
+    ttl:86400,
   }),
   secret:"secretCoder",
   resave: true, 
   saveUninitialized:true,   
-}))
+}));
 //Cambios passport: 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -53,8 +61,28 @@ app.use("/api/sessions", userRouter);
 app.use("/api/current", userRouter);
 app.use("/", viewsRouter);
 
+//clase25
+app.get("/pruebas", async (req,res)=>{
+
+  try{
+const usuarios = await UsersModel.find();
+res.send(usuarios);
+  }catch (error){
+    res.status(500).send("Error de servidor")
+  }
+})
+//conectamos mongodb
+mongoose.connect(mongo_url)
+.then(()=> console.log("Conectados a la bd"))
+.catch(()=> console.log("errorclase25"))
+//inicializamos el servidora
+app.listen(puerto);
+
+//------------------------------------------------------
 
 
+
+/*
 //Listen
 const httpServer = app.listen(PUERTO, () => {
     console.log(`Escuchando en el puerto: ${PUERTO}`);
@@ -80,3 +108,4 @@ console.log("Mensaje recibido", data)
   })
 })
 
+*/
