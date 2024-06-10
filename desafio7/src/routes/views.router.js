@@ -4,10 +4,9 @@ import express from "express";
 import ProductsController from "../controllers/products.controller.js";
 const router = express.Router(); 
 const pc = new ProductsController();
+import CartsController from "../controllers/carts.controller.js";
 
-
-import CartManager from "../controllers/carts-manager-db.js";
-const cm = new CartManager();
+const cc = new CartsController();
 
 
 router.get("/", async (req, res) => {
@@ -70,7 +69,7 @@ router.get("/carts/:cid", async (req, res) => {
   const cartId = req.params.cid;
 
   try {
-    const resultado = await cm.getCartById(cartId); // Verifica que se devuelve un resultado
+    const resultado = await  cc.getCartById(cartId); // Verifica que se devuelve un resultado
     const carrito = resultado && resultado.cart; // Asegúrate de obtener `cart`
 
 
@@ -110,7 +109,7 @@ router.get("/socket", async (req, res) => {
 
   router.get("/realTimeProducts", async (req, res) => {
     try{
-        const products = await pc.getProduct();
+        const products = await pc.getProducts();
         res.render("realTimeProducts", { products:products });
     }catch(error){
         res.status(500).json({error: "Error interno del servidor"})

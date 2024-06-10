@@ -1,4 +1,5 @@
 //carts-manager-db.js
+/*
 import mongoose from 'mongoose';
 import CartsModel from "../models/carts.model.js";
 import ProductsModel from '../models/products.model.js';
@@ -208,3 +209,4 @@ class CartManager{
 };
 
 export default CartManager;
+*/

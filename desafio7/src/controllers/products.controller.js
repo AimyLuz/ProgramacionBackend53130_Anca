@@ -8,27 +8,35 @@ const ps = new ProductsService();
 class ProductsController {
 
 //MOSTRAR PRODUCTOS
-async getProducts (req, res) {
+async getProducts(req, res) {
     try {
-        const limit = req.query.limit;
-        // Llamar al ProductManager para obtener productos
-        const productList = await ps.getProducts();
-        // Extraer el límite de la consulta
-        if (limit) {
-            res.json(productList.slice(0, limit));
-        } else {
-            res.json(productList);
+        const { page = 1, limit = 10, sort, query } = req.query; // Actualiza la obtención de los parámetros
+
+        // Llama al ProductManager para obtener productos con los parámetros adecuados
+        const productList = await ps.getProducts({ page: parseInt(page), limit: parseInt(limit), sort, query });
+
+        if (!productList || !productList.docs || !Array.isArray(productList.docs)) {
+            throw new Error("Lista de productos no es válida");
         }
-        
+
+        res.render("home", {
+            user: req.session.user,
+            products: productList.docs,
+            hasPrevPage: productList.hasPrevPage,
+            hasNextPage: productList.hasNextPage,
+            prevPage: productList.prevPage,
+            nextPage: productList.nextPage,
+            currentPage: productList.page,
+            totalPages: productList.totalPages,
+        });
     } catch (error) {
-        console.error("Error al obtener productos:", error);
-        // Devolver error 500 para errores del servidor
-        return res.status(500).json({
-            status: false,
-            msg: "Error interno del servidor",
+        console.error("Error al obtener productos:", error.message);
+        res.status(500).json({
+            status: "error",
+            error: "Error interno del servidor",
         });
     }
-};
+}
 
   //MOSTRAR PRODUCTO POR ID
   async getProductById (req, res) {
