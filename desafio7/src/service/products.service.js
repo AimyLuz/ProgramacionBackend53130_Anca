@@ -7,11 +7,11 @@ const pr = new ProductRepository();
 class ProductsService {
     async addProduct({title, description, price, thumbnail = [], code, stock, status, category}) {
         try {
-            if(!title|| !description || !price || !code || !stock || !status || !category) {
+            if (!title || !description || !price || !code || !stock || !status || !category) {
                 return { status: false, msg: "Error al agregar el producto, por favor completar los campos faltantes " };
             }
-            const existeProducto = await pr.findOne({code: code});
-            if(existeProducto) {
+            const existeProducto = await pr.findOne({ code: code });
+            if (existeProducto) {
                 return { status: false, msg: `Error al agregar el producto, ${code} repetido: ` };
             };
 
@@ -35,29 +35,38 @@ class ProductsService {
     async getProducts({ limit = 10, page = 1, sort, query } = {}) {
         try {
             const options = {
-              page,
-              limit,
-              lean: true, // Devuelve objetos JavaScript "planos"
+                page,
+                limit,
+                lean: true,
             };
-      
+    
             if (sort) {
-              options.sort = { price: sort === 'asc' ? 1 : -1 };
+                options.sort = { price: sort === 'asc' ? 1 : -1 };
             }
-      
+    
             const filter = query ? { category: query } : {};
-      
+    
+            console.log('Query filter:', filter);
+            console.log('Pagination options:', options);
+    
             const productList = await pr.getProducts(filter, options);
-      
-            return productList; // Devuelve directamente el resultado de paginación
-          } catch (error) {
+    
+            console.log('Paginated product list:', productList);
+    
+            if (!productList || !productList.docs || !productList.totalDocs || !productList.totalPages) {
+                throw new Error("La lista de productos devuelta no es válida");
+            }
+    
+            return productList;
+        } catch (error) {
             console.error("Error al obtener productos:", error);
             throw error;
-          }
+        }
     }
 
     async getProductById(id) {
         try {
-            const producto = await pr.findById(id);
+            const producto = await pr.getProductById(id);
             if (!producto) {
                 return { status: false, msg: `Producto con ID ${id} no encontrado` };
             } else {
@@ -70,22 +79,22 @@ class ProductsService {
 
     async deleteProduct(id) {
         try {
-            const deleteProduct = await pr.findByIdAndDelete(id);
+            const deleteProduct = await pr.deleteProduct(id);
             if (!deleteProduct) {
                 return { status: false, msg: `Producto con ID  ${id} no encontrado` };
             }
-            return { status: true, delete:deleteProduct, msg: `Producto con ID ${id} eliminado correctamente` };
+            return { status: true, delete: deleteProduct, msg: `Producto con ID ${id} eliminado correctamente` };
         } catch (error) {
             return { status: false, msg: "Error al intentar borrar el producto: " + error.message };
         }
     }
+    
     async updateProduct(id, productoActualizado) {
         try {
-            const updateProduct =  await pr.findByIdAndUpdate(id, productoActualizado, { new: true }); 
-            if(!updateProduct) {
+            const updateProduct = await pr.updateProduct(id, productoActualizado); 
+            if (!updateProduct) {
                 return { status: false, msg: `Producto con ID ${id} no encontrado` };
             }
-            
             return { status: true, product: updateProduct, msg: `Producto con ID ${id} actualizado correctamente` };
         } catch (error) {
             return { status: false, msg: "Error al intentar modificar el producto: " + error.message };

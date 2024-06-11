@@ -9,9 +9,10 @@ class ProductRepository {
         return await newProduct.save();
     }
 
-    async getProducts(filter = {}, options = {}) {
-        return await ProductsModel.paginate(filter, options);
+    async getProducts(filter, options) {
+        return ProductsModel.paginate(filter, options);
     }
+
 
     async getProductById(id) {
         return await ProductsModel.findById(id);

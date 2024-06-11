@@ -1,3 +1,4 @@
+//database.js
 
 //Nos conectamos a MongoAtlas por medio de mongoose: 
 import configObject from "./config/config.js";

@@ -8,60 +8,34 @@ import CartsController from "../controllers/carts.controller.js";
 
 const cc = new CartsController();
 
+router.get("/", pc.getProductsView.bind(pc));
 
-router.get("/", async (req, res) => {
-  try {
-    const { page = 1, limit = 2, sort, query } = req.query; // Incluye query y sort
-    const productList = await pc.getProducts({ page: parseInt(page), limit: parseInt(limit), sort, query });
-
-    if (!productList || !productList.docs || !Array.isArray(productList.docs)) {
-      throw new Error("Lista de productos no es válida");
-    }
-
-    res.render("home", {
-      user: req.session.user,
-      products: productList.docs, // Muestra los productos
-      hasPrevPage: productList.hasPrevPage,
-      hasNextPage: productList.hasNextPage,
-      prevPage: productList.prevPage,
-      nextPage: productList.nextPage,
-      currentPage: productList.page,
-      totalPages: productList.totalPages,
-    });
-  } catch (error) {
-    console.error("Error al obtener productos:", error.message);
-    res.status(500).json({
-      status: "error",
-      error: "Error interno del servidor",
-    });
-  }
-});
 router.get("/products", async (req, res) => {
-  try {
-    const { page = 1, limit = 2, sort, query } = req.query; // Incluye query y sort
-    const productList = await pc.getProducts({ page: parseInt(page), limit: parseInt(limit), sort, query });
+    try {
+        const { page = 1, limit = 2, sort, query } = req.query;
+        const productList = await pc.getProductsView({ page: parseInt(page), limit: parseInt(limit), sort, query });
 
-    if (!productList || !productList.docs || !Array.isArray(productList.docs)) {
-      throw new Error("Lista de productos no es válida");
+        if (!productList || !productList.docs || !Array.isArray(productList.docs)) {
+            throw new Error("Lista de productos no es válida");
+        }
+
+        res.render("products", {
+            user: req.session.user,
+            products: productList.docs,
+            hasPrevPage: productList.hasPrevPage,
+            hasNextPage: productList.hasNextPage,
+            prevPage: productList.prevPage,
+            nextPage: productList.nextPage,
+            currentPage: productList.page,
+            totalPages: productList.totalPages,
+        });
+    } catch (error) {
+        console.error("Error al obtener productos:", error.message);
+        res.status(500).json({
+            status: "error",
+            error: "Error interno del servidor",
+        });
     }
-
-    res.render("products", {
-      user: req.session.user,
-      products: productList.docs, // Muestra los productos
-      hasPrevPage: productList.hasPrevPage,
-      hasNextPage: productList.hasNextPage,
-      prevPage: productList.prevPage,
-      nextPage: productList.nextPage,
-      currentPage: productList.page,
-      totalPages: productList.totalPages,
-    });
-  } catch (error) {
-    console.error("Error al obtener productos:", error.message);
-    res.status(500).json({
-      status: "error",
-      error: "Error interno del servidor",
-    });
-  }
 });
 
 //pagina de carritos

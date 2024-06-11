@@ -74,9 +74,11 @@ res.send(usuarios);
 //conectamos mongodb
 mongoose.connect(mongo_url)
 .then(()=> console.log("Conectados a la bd"))
-.catch(()=> console.log("errorclase25"))
+.catch(()=> console.log("Error al conectar a la BD"))
 //inicializamos el servidora
-app.listen(puerto);
+app.listen(puerto, () => {
+  console.log(`Escuchando en el puerto: ${puerto}`);
+});
 
 //------------------------------------------------------
 
