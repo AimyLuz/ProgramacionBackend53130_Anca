@@ -8,8 +8,9 @@ import CartsController from "../controllers/carts.controller.js";
 
 const cc = new CartsController();
 
-router.get("/", pc.getProductsView.bind(pc));
+router.get("/", pc.getProductsView);
 
+/*
 router.get("/products", async (req, res) => {
     try {
         const { page = 1, limit = 2, sort, query } = req.query;
@@ -36,7 +37,7 @@ router.get("/products", async (req, res) => {
             error: "Error interno del servidor",
         });
     }
-});
+}); */
 
 //pagina de carritos
 router.get("/carts/:cid", async (req, res) => {
