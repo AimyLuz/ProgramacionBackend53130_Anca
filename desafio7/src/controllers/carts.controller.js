@@ -62,6 +62,29 @@ class CartsController {
 
     // 5. Mostrar carrito según ID
     async getCartById(req, res) {
+        const cartId = req.params.cid;
+
+        try {
+          const resultado = await  cc.getCartById(cartId); // Verifica que se devuelve un resultado
+          const carrito = resultado && resultado.cart; // Asegúrate de obtener `cart`
+      
+      
+          if (!carrito || !Array.isArray(carrito.products) || carrito.products.length === 0) { // Verificar si tiene productos
+            return res.status(404).json({ error: "Carrito no encontrado o sin productos" }); // Manejar el error
+          }
+          const productosEnCarrito = carrito.products.map(item => ({
+            product: item.product.toObject(), // Verificar que `product` es un documento completo
+            quantity: item.quantity
+          }));
+           res.render("carts", { productos: productosEnCarrito });
+        } catch (error) {
+           console.error("Error al obtener el carrito", error);
+           res.status(500).json({ error: "Error interno del servidor" });
+        }
+
+
+
+        /*
         try {
             const respuesta = await cs.getCartById(req.params.cid);
             if (respuesta.status) {
@@ -71,7 +94,7 @@ class CartsController {
             }
         } catch (error) {
             res.status(500).send("Error interno del servidor: " + error.message);
-        }
+        }*/
     }
 
     // 6. Borrar un producto del carrito
