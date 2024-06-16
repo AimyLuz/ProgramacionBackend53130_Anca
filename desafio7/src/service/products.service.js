@@ -46,12 +46,12 @@ class ProductsService {
     
             const filter = query ? { category: query } : {};
     
-            console.log('Query filter:', filter);
-            console.log('Pagination options:', options);
+            //console.log('Query filter:', filter);
+            //console.log('Pagination options:', options);
     
             const productList = await pr.getProducts(filter, options);
     
-            console.log('Paginated product list:', productList);
+            //console.log('Paginated product list:', productList);
     
             if (!productList || !productList.docs || !productList.totalDocs || !productList.totalPages) {
                 throw new Error("La lista de productos devuelta no es válida");

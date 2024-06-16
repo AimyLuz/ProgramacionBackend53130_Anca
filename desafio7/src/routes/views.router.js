@@ -10,24 +10,11 @@ const cc = new CartsController();
 const ps = new ProductsService();
 
 router.get("/", pc.getProductsView);
-//pagina de carritos
-router.get("/carts/:cid", pc.getProductById);
-router.get("/socket", async (req, res) => {
-    try{
-        res.render("socket");
-    }catch(error){
-        res.status(500).json({error: "Error interno del servidor"})
-    }
-  });
-  router.get("/realTimeProducts", async (req, res) => {
-    try{
-        const products = await ps.getProducts();
-        res.render("realTimeProducts", { products:products });
-    }catch(error){
-        res.status(500).json({error: "Error interno del servidor"})
-    }
-  });
-  router.get("/chat", async (req, res) => {
+
+//Ver mi carrito
+router.get("/cart/:cid", cc.getCartById);
+
+router.get("/chat", async (req, res) => {
     res.render("chat");
  })
 router.get("/login", (req,res)=>{
@@ -47,7 +34,22 @@ router.get("/profile", (req,res)=>{
     }
   
 });
+router.get("/socket", async (req, res) => {
+  try{
+      res.render("socket");
+  }catch(error){
+      res.status(500).json({error: "Error interno del servidor"})
+  }
+});
 
+router.get("/realTimeProducts", async (req, res) => {
+  try{
+      const products = await ps.getProducts();
+      res.render("realTimeProducts", { products:products });
+  }catch(error){
+      res.status(500).json({error: "Error interno del servidor"})
+  }
+});
 
 
 export default router;

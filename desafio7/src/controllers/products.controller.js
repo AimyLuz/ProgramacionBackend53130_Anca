@@ -6,11 +6,11 @@ class ProductsController {
     async getProductsApi(req, res) {
         try {
             const { page = 1, limit = 10, sort, query } = req.query;
-            console.log('Request query parameters:', { page, limit, sort, query });
+            //console.log('Request query parameters:', { page, limit, sort, query });
 
             const productList = await ps.getProducts({ page: parseInt(page), limit: parseInt(limit), sort, query });
 
-            console.log('Product list:', productList);
+            //console.log('Product list:', productList);
 
             if (!productList || !productList.docs || !Array.isArray(productList.docs)) {
                 throw new Error("Lista de productos no es válida");
@@ -38,7 +38,7 @@ class ProductsController {
     async getProductsView(req, res) {
         try {
             const { page = 1, limit = 2, sort, query } = req.query;
-            console.log('Request query parameters (view):', { page, limit, sort, query });
+            //console.log('Request query parameters (view):', { page, limit, sort, query });
 
             const productList = await ps.getProducts({ page: parseInt(page), limit: parseInt(limit), sort, query });
 
@@ -46,7 +46,7 @@ class ProductsController {
                 throw new Error("Lista de productos es indefinida o vacía");
             }
 
-            console.log('Product list (view):', productList);
+            //console.log('Product list (view):', productList);
 
             const requiredProperties = ['hasPrevPage', 'hasNextPage', 'prevPage', 'nextPage', 'page', 'totalPages'];
 
@@ -55,7 +55,7 @@ class ProductsController {
                     throw new Error(`La propiedad '${prop}' es indefinida en productList`);
                 }
             });
-
+/*
             console.log('Rendering home view with:', {
                 user: req.session.user,
                 products: productList.docs,
@@ -65,7 +65,7 @@ class ProductsController {
                 nextPage: productList.nextPage,
                 currentPage: productList.page,
                 totalPages: productList.totalPages,
-            });
+            });*/
 
             res.render("home", {
                 user: req.session.user,

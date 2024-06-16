@@ -19,7 +19,9 @@ import mongoose from "mongoose";
 //clase25
 import configObject from "./config/config.js";
 import cors from "cors"; //para unir front con back
-
+import dotenv from 'dotenv';
+// Cargar las variables de entorno
+//dotenv.config({ path: './.env.produccion' });
 
 const app = express();
 //const PUERTO = 8080;
@@ -73,23 +75,23 @@ res.send(usuarios);
 })
 //conectamos mongodb
 mongoose.connect(mongo_url)
-.then(()=> console.log("Conectados a la bd"))
+.then(()=> console.log("Conectados a la BD"))
 .catch(()=> console.log("Error al conectar a la BD"))
 //inicializamos el servidora
-app.listen(puerto, () => {
+const httpServer = app.listen(puerto, () => {
   console.log(`Escuchando en el puerto: ${puerto}`);
 });
 
 //------------------------------------------------------
 
-
-
 /*
-//Listen
-const httpServer = app.listen(PUERTO, () => {
-    console.log(`Escuchando en el puerto: ${PUERTO}`);
-})
+const port = process.env.PUERTO || 8080;
 
+//Listen
+app.listen(port, () => {
+    console.log(`Escuchando en el puerto: ${port}`);
+})
+*/
 // chat en el ecommerce: 
 
 const io = new Server(httpServer);
@@ -108,6 +110,20 @@ console.log("Mensaje recibido", data)
       io.sockets.emit("messagesLogs", messages);
    
   })
-})
 
-*/
+  socket.on("add_product", async (newProduct) => {
+    try {
+      const ps = new ProductsService();
+      const result = await ps.addProduct(newProduct);
+      if (result.status) {
+        io.emit('products', { products: await ps.getProducts({ limit: 100 }) });
+        socket.emit('success');
+      } else {
+        socket.emit('error', { message: result.msg });
+      }
+    } catch (error) {
+      socket.emit('error', { message: "Error al agregar el producto: " + error.message });
+    }
+  });
+});
+

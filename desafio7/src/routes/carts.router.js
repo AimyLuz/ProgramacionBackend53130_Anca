@@ -29,14 +29,14 @@ router.delete('/:cid', cc.emptyCart);
 */
 const cartsController = new CartsController();
 
-router.post('/', cartsController.addCart.bind(cartsController));
-router.delete('/:cid', cartsController.deleteCart.bind(cartsController));
-router.post('/:cid/product/:pid', cartsController.addProductToCart.bind(cartsController));
-router.get('/', cartsController.getCarts.bind(cartsController));
-router.get('/:cid', cartsController.getCartById.bind(cartsController));
-router.delete('/:cid/product/:pid', cartsController.deleteProductFromCart.bind(cartsController));
-router.put('/:cid', cartsController.updateCart.bind(cartsController));
-router.put('/:cid/product/:pid', cartsController.updateProductsQuantityCart.bind(cartsController));
-router.put('/:cid/empty', cartsController.emptyCart.bind(cartsController));
+router.post('/', cartsController.addCart);
+router.delete('/:cid', cartsController.deleteCart);
+router.post('/:cid/product/:pid', cartsController.addProductToCart);
+router.get('/', cartsController.getCarts);
+router.get('/:cid', cartsController.getCartById);
+router.delete('/:cid/product/:pid', cartsController.deleteProductFromCart);
+router.put('/:cid', cartsController.updateCart);
+router.put('/:cid/product/:pid', cartsController.updateProductsQuantityCart);
+router.put('/:cid/empty', cartsController.emptyCart);
 export default router;
 
