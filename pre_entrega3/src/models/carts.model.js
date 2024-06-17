@@ -14,7 +14,13 @@ const cartsSchema = new mongoose.Schema({
             }
         }
     ]
-})
+});
+// Middleware pre que realiza la población automáticamente
+cartsSchema.pre('findOne', function (next) {
+    this.populate('products.product', '_id title price');
+    next();
+  });
+  
 
 const CartsModel = mongoose.model("carts", cartsSchema);
 

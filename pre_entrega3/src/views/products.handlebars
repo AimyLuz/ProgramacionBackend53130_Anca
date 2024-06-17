@@ -4,7 +4,9 @@
   <div class="container text-center">
     <p>Bienvenido!, {{user.first_name}} {{user.last_name}}!</p>
     <p>Rol: {{user.role}} </p>
-    <a href="/api/sessions/logout">Logout</a>
+         <form action="/api/users/logout" method="POST">
+    <button type="submit">Logout</button>
+  </form>
   </div>
 </header>
 {{/if}}
@@ -32,9 +34,9 @@
             <p class="card-text">{{this.description}}</p>
           </div>
           <div class="text-muted card-footer">Stock disponible: {{this.stock}} unidades</div>
-          <div>
-            <button type="button" class="btn btn-success">Agregar al carrito</button>
-          </div>
+                         <form class="botones" action="/api/carts/{{../cartId}}/product/{{id}}" method="POST">
+                    <button type="submit" class="btn btn-success">Agregar al Carrito</button>
+                </form>
         </div>
       </div>
     </div>

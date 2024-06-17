@@ -1,7 +1,9 @@
+//views.controller.js
 import ProductsService from "../service/products.service.js";
 import CartsController from "../controllers/carts.controller.js";
 import CartsRepository from "../repositories/carts.repository.js";
 import ProductsModel from "../models/products.model.js";
+import UserDTO from "../dto/user.dto.js";
 const ps = new ProductsService();
 const cc = new CartsController();
 const cr = new CartsRepository();
@@ -28,7 +30,7 @@ class ViewsController {
                     throw new Error(`La propiedad '${prop}' es indefinida en productList`);
                 }
             });
-
+            const cartId = req.session.cartId;
             res.render("products", {
                 user: req.session.user,
                 products: productList.docs,
@@ -38,6 +40,7 @@ class ViewsController {
                 nextPage: productList.nextPage,
                 currentPage: productList.page,
                 totalPages: productList.totalPages,
+                cartId,
             });
         } catch (error) {
             console.error("Error al obtener productos (view):", error.message);
@@ -47,11 +50,16 @@ class ViewsController {
             });
         }
     }
-
+    async renderProfile(req, res) {
+        //Con DTO: 
+        const userDto = new UserDTO(req.user.first_name, req.user.last_name, req.user.role);
+        const isAdmin = req.user.role === 'admin';
+        res.render("profile", { user: userDto, isAdmin });
+    }
     async renderCart(req, res) {
-        const cartId = req.params.cid;
+        const cartId = req.session.user.cart;
         try {
-            const carrito = await cr.obtenerProductosDeCarrito(cartId);
+            const carrito = await cr.getCartById(cartId);
 
             if (!carrito) {
                 console.log("No existe ese carrito con el id");
@@ -109,4 +117,4 @@ class ViewsController {
     }
 }
 
-export default new ViewsController();
+export default ViewsController;

@@ -7,19 +7,20 @@ import CartsController from '../controllers/carts.controller.js';
 import ProductsService from '../service/products.service.js';
 import passport from 'passport';
 import ViewsController from '../controllers/views.controller.js';
+import ensureCart from '../middleware/ensureCart.js';
 const router = express.Router();
 const pc = new ProductsController();
 const cc = new CartsController();
 const ps = new ProductsService();
+const vc = new ViewsController();
 
-router.get("/products", checkUserRole(['usuario']),passport.authenticate('jwt', { session: false }), ViewsController.renderProducts);
-
-router.get("/carts/:cid", ViewsController.renderCart);
-router.get("/login", ViewsController.renderLogin);
-router.get("/register", ViewsController.renderRegister);
-router.get("/realtimeproducts", checkUserRole(['admin']), ViewsController.renderRealTimeProducts);
-router.get("/chat", checkUserRole(['usuario']) ,ViewsController.renderChat);
-router.get("/", ViewsController.renderHome);
-
+router.get("/", vc.renderHome);
+router.get("/products", authMiddleware, ensureCart, vc.renderProducts);
+router.get("/carts/:cid", authMiddleware, ensureCart, vc.renderCart);
+router.get("/login", vc.renderLogin);
+router.get("/register", vc.renderRegister);
+router.get("/realtimeproducts", authMiddleware, checkUserRole(['admin']), vc.renderRealTimeProducts);
+router.get("/chat", authMiddleware, checkUserRole(['usuario']), vc.renderChat);
+router.get("/profile", authMiddleware,ensureCart, vc.renderProfile);
 
 export default router;

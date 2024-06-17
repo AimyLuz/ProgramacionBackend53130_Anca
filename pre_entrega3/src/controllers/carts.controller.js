@@ -34,13 +34,18 @@ class CartsController {
 
     // 3. Agregar productos al carrito
     async addProductToCart(req, res) {
+        const cartId = req.params.cid;
+        const productId = req.params.pid;
+        const quantity = req.body.quantity || 1;
         try {
-            const respuesta = await cs.addProductToCart(req.params.cid, req.params.pid, req.body.quantity);
+            const respuesta = await cs.addProductToCart(cartId, productId, quantity);
             if (respuesta.status) {
                 res.status(200).send(respuesta);
             } else {
                 res.status(400).send(respuesta);
             }
+            const carritoID = (req.user.cart).toString();
+            res.redirect(`/carts/${carritoID}`)
         } catch (error) {
             res.status(500).send("Error interno del servidor: " + error.message);
         }
@@ -65,7 +70,7 @@ class CartsController {
         const cartId = req.params.cid;
 
         try {
-          const resultado = await  cc.getCartById(cartId); // Verifica que se devuelve un resultado
+          const resultado = await  cs.getCartById(cartId); // Verifica que se devuelve un resultado
           const carrito = resultado && resultado.cart; // Asegúrate de obtener `cart`
       
       

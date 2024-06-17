@@ -1,3 +1,4 @@
+//app.js
 import express from 'express';
 import session from 'express-session';
 import exphbs from 'express-handlebars';
@@ -8,6 +9,7 @@ import cartsRouter from './routes/carts.router.js';
 import productsRouter from './routes/products.router.js';
 import viewsRouter from './routes/views.router.js';
 import userRouter from './routes/user.router.js';
+//import sessionRouter from './routes/session.router.js';
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 import mongoose from 'mongoose';
@@ -19,44 +21,43 @@ import MessageModel from './models/mesagge.model.js';
 import MongoStore from "connect-mongo";
 const app = express();
 const { mongo_url, puerto } = configObject;
+import cookieParser from 'cookie-parser';
+
 
 
 
 // Middleware
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('./src/public'));
 app.use(cors());
 
-app.use(authMiddleware);
 // Configuración de express-session
-const sessionStore = MongoStore.create({
-  mongoUrl: mongo_url,
-  ttl: 86400, // Tiempo de vida de la sesión en segundos (opcional)
-});
 app.use(session({
-  store: sessionStore,
-  secret:"secretCoder",
-  resave: true, 
-  saveUninitialized:true,   
+    store: MongoStore.create({ mongoUrl: mongo_url, ttl: 86400 }),
+    secret: "secretCoder",
+    resave: true,
+    saveUninitialized: true,
 }));
-// Passport
-app.use(passport.initialize());
-app.use(passport.session());
-initializePassport();
 
+  // Passport
+  app.use(passport.initialize());
+  app.use(passport.session());
+  initializePassport();
+  
 // Handlebars
 app.engine('handlebars', exphbs.engine());
 app.set('view engine', 'handlebars');
 app.set('views', './src/views');
 
 // Rutas
-app.use('/api/products', productsRouter);
-app.use('/api/carts', cartsRouter);
-app.use('/api/users', userRouter);
-app.use("/api/sessions", userRouter);
-app.use('/api/current', userRouter);
-app.use('/', viewsRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
+app.use("/api/users", userRouter);
+app.use("/", viewsRouter);
+
 
 app.get('/pruebas', async (req, res) => {
     try {
@@ -104,3 +105,10 @@ io.on('connection', (socket) => {
         }
     });
 });
+
+
+//websocket
+///Websockets: 
+
+//import SocketManager from './sockets/socketmanager.js';
+//new SocketManager(httpServer);

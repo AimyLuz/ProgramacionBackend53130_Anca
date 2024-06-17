@@ -1,9 +1,9 @@
+//user.controller.js
 import CartsModel from "../models/carts.model.js";
-import jwt from "jsonwebtoken";
 import { createHash, isValidPassword } from "../utils/hashbcryp.js";
 import UserDTO from "../dto/user.dto.js";
 import UsersModel from "../models/users.model.js";
-
+import ensureCart from "../middleware/ensureCart.js";
 class UserController {
     async register(req, res) {
         const { first_name, last_name, email, password, age } = req.body;
@@ -13,31 +13,21 @@ class UserController {
                 return res.status(400).send("El usuario ya existe");
             }
 
-            //Creo un nuevo carrito: 
             const nuevoCarrito = new CartsModel();
             await nuevoCarrito.save();
 
-            const nuevoUsuario =  await UsersModel.create({
+            const nuevoUsuario = await UsersModel.create({
                 first_name,
                 last_name,
                 email,
-                cart: nuevoCarrito._id, 
+                cart: nuevoCarrito._id,
                 password: createHash(password),
                 age
             });
 
             await nuevoUsuario.save();
 
-            const token = jwt.sign({ user: nuevoUsuario }, "coderhouse", {
-                expiresIn: "1h"
-            });
-
-            res.cookie("coderCookieToken", token, {
-                maxAge: 3600000,
-                httpOnly: true
-            });
-
-            res.redirect("/api/users/profile");
+            res.redirect("/login");
         } catch (error) {
             console.error(error);
             res.status(500).send("Error interno del servidor");
@@ -45,52 +35,63 @@ class UserController {
     }
 
     async login(req, res) {
-        const { email, password } = req.body;
+        if (!req.user) {
+            return res.status(400).send("Credenciales inválidas");
+        }
+
+        // Asegurar que el usuario tenga un carrito
+        await ensureCart(req, res, async () => {
+            req.session.user = {
+                _id: req.user._id,
+                first_name: req.user.first_name,
+                last_name: req.user.last_name,
+                age: req.user.age,
+                email: req.user.email,
+                cart: req.user.cart
+            };
+
+            req.session.login = true;
+            res.redirect("/profile");
+        });
+    }
+    async createUser(req, res) {
         try {
-            const usuarioEncontrado = await UsersModel.findOne({ email });
-
-            if (!usuarioEncontrado) {
-                return res.status(401).send("Usuario no válido");
-            }
-
-            const esValido = isValidPassword(password, usuarioEncontrado);
-            if (!esValido) {
-                return res.status(401).send("Contraseña incorrecta");
-            }
-
-            const token = jwt.sign({ user: usuarioEncontrado }, "coderhouse", {
-                expiresIn: "1h"
-            });
-
-            res.cookie("coderCookieToken", token, {
-                maxAge: 3600000,
-                httpOnly: true
-            });
-
-            res.redirect("/api/users/profile");
+            // Lógica para crear un usuario
+            const user = await UsersModel.create(req.body);
+            res.status(201).json(user);
         } catch (error) {
-            console.error(error);
-            res.status(500).send("Error interno del servidor");
+            res.status(500).json({ error: error.message });
         }
     }
 
     async profile(req, res) {
-        //Con DTO: 
-        const userDto = new UserDTO(req.user.first_name, req.user.last_name, req.user.role);
-        const isAdmin = req.user.role === 'admin';
-        res.render("profile", { user: userDto, isAdmin });
+        if (req.isAuthenticated()) {
+            res.json(req.user);
+        } else {
+            res.status(401).send("No autorizado");
+        }
     }
 
     async logout(req, res) {
-        res.clearCookie("coderCookieToken");
-        res.redirect("/login");
-    }
+            try {
+                req.session.destroy((err) => {
+                    if (err) {
+                        return res.status(500).json({ error: 'Logout failed' });
+                    }
+                    res.clearCookie('connect.sid'); // Clear the session cookie
+                    return res.redirect('/login'); // Redirigir después de borrar la cookie y destruir la sesión
+                });
+            } catch (error) {
+                console.error(error);
+                return res.status(500).json({ error: 'Logout failed' });
+            }
+        }
 
     async admin(req, res) {
-        if (req.user.user.role !== "admin") {
+        if (req.session.user.role !== "admin") {
             return res.status(403).send("Acceso denegado");
         }
         res.render("admin");
     }
 }
-export default new UserController();
+export default UserController;

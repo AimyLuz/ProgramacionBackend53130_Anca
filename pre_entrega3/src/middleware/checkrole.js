@@ -1,23 +1,16 @@
-import jwt from 'jsonwebtoken';
+//middleware/checkrole.js
+
 
 const checkUserRole = (allowedRoles) => (req, res, next) => {
-    const token = req.cookies.coderCookieToken;
+    if (!req.session.login) {
+        return res.status(401).redirect("/login");
+    }
 
-    if (token) {
-        jwt.verify(token, 'coderhouse', (err, decoded) => {
-            if (err) {
-                res.status(403).send('Acceso denegado. Token inválido.');
-            } else {
-                const userRole = decoded.user.role;
-                if (allowedRoles.includes(userRole)) {
-                    next();
-                } else {
-                    res.status(403).send('Acceso denegado. No tienes permiso para acceder a esta página.');
-                }
-            }
-        });
+    const userRole = req.session.user.role;
+    if (allowedRoles.includes(userRole)) {
+        next();
     } else {
-        res.status(403).send('Acceso denegado. Token no proporcionado.');
+        res.status(403).send('Acceso denegado. No tienes permiso para acceder a esta página.');
     }
 };
 

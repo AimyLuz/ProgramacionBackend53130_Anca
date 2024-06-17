@@ -1,4 +1,4 @@
-//const mongoose = require("mongoose");
+//user.model.js
 import mongoose from "mongoose";
 
 //Definimos el esquema : "schema". 

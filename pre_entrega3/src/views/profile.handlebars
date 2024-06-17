@@ -15,13 +15,13 @@
             <p><strong>Cart ID:</strong> <a href="/api/carts/{{user.cart}}">{{user.cart}}</a></p>
         </div>
          <form action="/api/users/logout" method="POST">
-    <button type="submit"><a href="/api/sessions/logout" class="link">Logout</a></button>
+    <button class="btn btn-success"type="submit">Logout</button>
   </form>
     {{#if this.isAdmin}}
-    <a class="btnMios" href="/realtimeproducts">Modificar Productos</a>
+    <a class="button" href="/realtimeproducts">Modificar Productos</a>
   {{else}}
-    <a class="btnMios" href="/chat">Chat en vivo</a>
-    <a class="btnMios" href="/products">Tienda</a>
+    <a class="button" href="/chat">Chat en vivo</a>
+    <a class="button" href="/products">Tienda</a>
   {{/if}}
     </div>
 
