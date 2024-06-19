@@ -14,6 +14,7 @@ const ensureCart = async (req, res, next) => {
             await UsersModel.findByIdAndUpdate(req.user._id, { cart: newCart._id });
 
             req.session.user.cart = newCart._id; // Actualizar la sesión con el carrito del usuario
+            //req.session.user.cart = 'default-cart-id';
         } catch (error) {
             console.error("Error al asegurar carrito para el usuario:", error);
             return res.status(500).json({ error: 'Error interno del servidor' });

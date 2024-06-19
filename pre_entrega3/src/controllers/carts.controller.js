@@ -40,12 +40,11 @@ class CartsController {
         try {
             const respuesta = await cs.addProductToCart(cartId, productId, quantity);
             if (respuesta.status) {
-                res.status(200).send(respuesta);
+                const carritoID = (req.user.cart).toString();
+                res.redirect(`/carts/${carritoID}`);
             } else {
                 res.status(400).send(respuesta);
             }
-            const carritoID = (req.user.cart).toString();
-            res.redirect(`/carts/${carritoID}`)
         } catch (error) {
             res.status(500).send("Error interno del servidor: " + error.message);
         }

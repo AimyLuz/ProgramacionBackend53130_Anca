@@ -22,5 +22,6 @@ router.get("/register", vc.renderRegister);
 router.get("/realtimeproducts", authMiddleware, checkUserRole(['admin']), vc.renderRealTimeProducts);
 router.get("/chat", authMiddleware, checkUserRole(['usuario']), vc.renderChat);
 router.get("/profile", authMiddleware,ensureCart, vc.renderProfile);
+router.get('/empty/:cid', cc.emptyCart);
 
 export default router;

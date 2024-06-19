@@ -30,7 +30,7 @@ class ViewsController {
                     throw new Error(`La propiedad '${prop}' es indefinida en productList`);
                 }
             });
-            const cartId = req.session.cartId;
+            const cartId = req.session.user.cart;
             res.render("products", {
                 user: req.session.user,
                 products: productList.docs,
@@ -78,7 +78,7 @@ class ViewsController {
                 totalCompra += totalPrice;
 
                 return {
-                    product: { ...product, totalPrice },
+                    product: { ...product, totalPrice, thumbnail: product.thumbnail},
                     quantity,
                     cartId
                 };
