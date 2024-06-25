@@ -14,13 +14,17 @@
 
 ## Primer Pre entrega : 
     Entregado: ✅
-    Aprobado:  ✅(4 puntos u.u )
+    Aprobado:  ✅(4 puntos )
 
 ### Desafío 4 : 
     Entregado: ✅
     Aprobado:  ✅
 
 ###  Practica Integradora : 
+    Entregado: ✅
+    Aprobado:  ✅
+
+## Segunda Pre entrega : 
     Entregado: ✅
     Aprobado:  ✅
 
@@ -37,5 +41,13 @@
     Aprobado:  ✅
 
 ### Desafío 7 : 
+    Entregado: ✅
+    Aprobado:  
+
+### Tercer Pre entrega : 
+    Entregado: ✅
+    Aprobado:  
+
+### Desafío 8 : 
     Entregado: 
     Aprobado:  
