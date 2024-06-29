@@ -4,10 +4,13 @@ import CartsController from "../controllers/carts.controller.js";
 import CartsRepository from "../repositories/carts.repository.js";
 import ProductsModel from "../models/products.model.js";
 import UserDTO from "../dto/user.dto.js";
+import nodemailer from "nodemailer";
+import CartsService from "../service/carts.service.js";
 const ps = new ProductsService();
 const cc = new CartsController();
 const cr = new CartsRepository();
 const pm = new ProductsModel();
+const cs = new CartsService();
 
 class ViewsController {
     async renderProducts(req, res) {
@@ -133,6 +136,40 @@ class ViewsController {
             }
         } catch (error) {
             res.status(500).json({ status: 'error', message: error.message });
+        }
+    }
+
+    async compraExitosa(req, res) {
+        const userEmail = req.user.email; // Obtener el correo del usuario autenticado
+        const transport = nodemailer.createTransport({
+            service: "gmail",
+            port: 587,
+            auth: {
+                user: "ayelen.anca@gmail.com",
+                pass: "bsqc hogc sjpa ydxg"
+            },
+            tls: {
+                rejectUnauthorized: false
+            }
+        });
+        try {
+            await transport.sendMail({
+                from: "Compra exitosa <ayelen.anca@gmail.com>",
+                to: userEmail, // Usar el correo del usuario autenticado
+                subject: "Compra exitosa",
+                html: `<h1>Arrabal MusicStore: </h1> <p>Su compra fue exitosa!</p>
+                <img src="cid:tsuki" />`,
+                // Para enviar una imagen como adjunto:
+                attachments: [{
+                    filename: "conejito_mate.jpeg",
+                    path: "./src/public/img/conejito_mate.jpeg",
+                    cid: "tsuki"
+                }]
+            });
+            res.render("mail");
+        } catch (error) {
+            console.error('Error al enviar el correo:', error);
+            res.status(500).send({ error: "Error al enviar el correo" });
         }
     }
 }

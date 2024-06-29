@@ -1,0 +1,3 @@
+      PID    PPID    PGID     WINPID   TTY         UID    STIME COMMAND
+     1257    1204    1257      12304  cons0     197609 15:34:42 /usr/bin/PS
+     1204       1    1204       6232  cons0     197609 15:34:39 /usr/bin/bash
