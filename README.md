@@ -1,14 +1,14 @@
 # Programación Backend - Comisión 53130
 ## Ayelén Luz Anca Gulla
-### Desafío 1 : 
+### Desafío 1 :  ECMAScripts y ECMAScripts avanzado
     Entregado: ✅
     Aprobado:  ✅
 
-### Desafío 2 : 
+### Desafío 2 : Manejo de archivos
     Entregado: ✅
     Aprobado:  ✅
 
-### Desafío 3 : 
+### Desafío 3 : Servidor con Express
     Entregado: ✅
     Aprobado:  ✅
 
@@ -16,11 +16,11 @@
     Entregado: ✅
     Aprobado:  ✅(4 puntos )
 
-### Desafío 4 : 
+### Desafío 4 : Websockets + Handlebars 
     Entregado: ✅
     Aprobado:  ✅
 
-###  Practica Integradora : 
+###  Practica Integradora : sobre tu ecommerce
     Entregado: ✅
     Aprobado:  ✅
 
@@ -28,19 +28,19 @@
     Entregado: ✅
     Aprobado:  ✅
 
-### Desafío 5 : 
+### Desafío 5 : Implementación de login
     Entregado: ✅
     Aprobado:  ✅
 
-### Desafío 6 : 
+### Desafío 6 : Refactor a nuestro login
     Entregado: ✅
     Aprobado:  ✅
 
-###  Practica Integradora : 
+###  Practica Integradora : sobre tu ecommerce
     Entregado: ✅
     Aprobado:  ✅
 
-### Desafío 7 : 
+### Desafío 7 : Reestructura de nuestro servidor
     Entregado: ✅
     Aprobado:  
 
@@ -48,6 +48,6 @@
     Entregado: ✅
     Aprobado:  
 
-### Desafío 8 : 
+### Desafío 8 : Mocking y manejo de errores
     Entregado: 
     Aprobado:  
