@@ -1,5 +1,5 @@
 import ProductsService from "../service/products.service.js";
-
+import { createError, ERROR_TYPES } from '../utils/errorDirectory.js';
 const ps = new ProductsService();
 
 class ProductsController {
@@ -13,7 +13,7 @@ class ProductsController {
             //console.log('Product list:', productList);
 
             if (!productList || !productList.docs || !Array.isArray(productList.docs)) {
-                throw new Error("Lista de productos no es válida");
+                throw createError(ERROR_TYPES.SERVER_ERROR, "Lista de productos no es válida");
             }
 
             res.json({
@@ -43,7 +43,7 @@ class ProductsController {
             const productList = await ps.getProducts({ page: parseInt(page), limit: parseInt(limit), sort, query });
 
             if (!productList || !productList.docs) {
-                throw new Error("Lista de productos es indefinida o vacía");
+               throw createError(ERROR_TYPES.SERVER_ERROR,"Lista de productos es indefinida o vacía");
             }
 
             //console.log('Product list (view):', productList);
@@ -52,20 +52,9 @@ class ProductsController {
 
             requiredProperties.forEach(prop => {
                 if (productList[prop] === undefined) {
-                    throw new Error(`La propiedad '${prop}' es indefinida en productList`);
+                    throw createError(ERROR_TYPES.SERVER_ERROR,`La propiedad '${prop}' es indefinida en productList`);
                 }
             });
-/*
-            console.log('Rendering home view with:', {
-                user: req.session.user,
-                products: productList.docs,
-                hasPrevPage: productList.hasPrevPage,
-                hasNextPage: productList.hasNextPage,
-                prevPage: productList.prevPage,
-                nextPage: productList.nextPage,
-                currentPage: productList.page,
-                totalPages: productList.totalPages,
-            });*/
 
             res.render("home", {
                 user: req.session.user,
@@ -98,23 +87,20 @@ class ProductsController {
                     msg: "Producto encontrado exitosamente"
                 });
             } else {
-                return res.status(404).json({
-                    status: false,
-                    msg: "Producto no encontrado"
-                });
+                throw createError(ERROR_TYPES.PRODUCT_NOT_FOUND, "Producto no encontrado");
             }
         } catch (error) {
-            console.error("Error al obtener el producto:", error.message);
-            return res.status(500).json({
-                status: false,
-                msg: "Error interno del servidor"
-            });
+            next(error);
         }
     }
 
     async addProduct(req, res) {
         try {
             const { title, description, price, thumbnail, code, stock, status, category } = req.body;
+            if (!title || !price) {
+                throw createError(ERROR_TYPES.MISSING_REQUIRED_FIELDS, "El título y el precio son campos requeridos", { title, price });
+            }
+
             const respuesta = await ps.addProduct({ title, description, price, thumbnail, code, stock, status, category });
 
             if (respuesta.status) {
@@ -123,8 +109,7 @@ class ProductsController {
                 return res.status(400).json(respuesta);
             }
         } catch (error) {
-            console.error("Error al agregar el producto:", error.message);
-            return res.status(500).json({ status: false, msg: "Error interno del servidor" });
+            next(error);
         }
     }
 
@@ -140,9 +125,7 @@ class ProductsController {
                 return res.status(400).json(respuesta);
             }
         } catch (error) {
-            console.error("Error al actualizar el producto:", error.message);
-            return res.status(500).json({ status: false, msg: "Error interno del servidor" });
-        }
+            next(error);}
     }
 
     async deleteProduct(req, res) {
@@ -153,17 +136,10 @@ class ProductsController {
             if (respuesta.status) {
                 return res.status(200).json(respuesta);
             } else {
-                return res.status(404).json({
-                    status: false,
-                    msg: `Producto con ID ${productId} no encontrado.`
-                });
+                throw createError(ERROR_TYPES.PRODUCT_NOT_FOUND, `Producto con ID ${productId} no encontrado.`);
             }
         } catch (error) {
-            console.error("Error al borrar el producto:", error.message);
-            return res.status(500).json({
-                status: false,
-                msg: "Error interno del servidor: " + error.message
-            });
+            next(error);
         }
     }
 }

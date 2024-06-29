@@ -28,5 +28,6 @@ router.get("/chat", authMiddleware, checkUserRole(['usuario']), vc.renderChat);
 router.get("/profile", authMiddleware,ensureCart, vc.renderProfile);
 router.get('/empty/:cid', cc.emptyCart);
 router.get("/api/carts/:cid/purchase", authMiddleware, ensureCart, vc.compraExitosa);
+router.get("/mockingproducts", vc.renderMockingProducts);
 
 export default router;
