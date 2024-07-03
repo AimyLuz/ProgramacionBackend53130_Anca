@@ -1,7 +1,7 @@
 //views.router.js
 import express from 'express';
 import ProductsController from '../controllers/products.controller.js';
-import authMiddleware from '../middleware/authmiddleware.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 import checkUserRole from '../middleware/checkrole.js';
 import CartsController from '../controllers/carts.controller.js';
 import ProductsService from '../service/products.service.js';
@@ -28,5 +28,6 @@ router.get("/chat", authMiddleware, checkUserRole(['usuario']), vc.renderChat);
 router.get("/profile", authMiddleware,ensureCart, vc.renderProfile);
 router.get('/empty/:cid', cc.emptyCart);
 router.get("/api/carts/:cid/purchase", authMiddleware, ensureCart, vc.compraExitosa);
+router.get("/mockingproducts", vc.renderMockingProducts);
 
 export default router;
