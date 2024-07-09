@@ -42,12 +42,16 @@
 
 ### Desafío 7 : Reestructura de nuestro servidor
     Entregado: ✅
-    Aprobado:  
+    Aprobado:   ✅
 
 ### Tercer Pre entrega : 
     Entregado: ✅
-    Aprobado:  
+    Aprobado:   ✅
 
 ### Desafío 8 : Mocking y manejo de errores
-    Entregado: 
+    Entregado:  ✅
+    Aprobado:   ✅
+
+### Desafío 9 :  Logging y testing de performance
+    Entregado:  ✅
     Aprobado:  
