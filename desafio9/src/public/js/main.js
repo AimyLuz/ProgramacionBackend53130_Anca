@@ -3,14 +3,14 @@ const socket = io();
 const products = [{ stock: 0 }, { stock: 1 }]
 const form = document.getElementById('addProduct')
 const catalogue = document.getElementById('catalogue')
-
+import { addLogger, logger } from "../../utils/logger";
 
 socket.on('connect', () => {
-    console.log('Conexión establecida con el servidor');
+    logger.info('Conexión establecida con el servidor');
   });
 //Capturo campos del formulario, envío evento para agregar producto y borro contenido de los campos del formulario
 form.addEventListener('submit', ev => {
-    console.log('addevent')
+    logger.info('addevent')
   ev.preventDefault()
   const newProduct = {
     title: ev.target.title.value,
@@ -28,7 +28,7 @@ form.addEventListener('submit', ev => {
 
 //Escucho evento para renderizar lista de productos
 socket.on('products', (data) => {
-    console.log('Datos recibidos:', data);
+    logger.info('Datos recibidos:', data);
     if (data && Array.isArray(data.products)) {
         while (catalogue.firstChild) {
           catalogue.removeChild(catalogue.firstChild);
@@ -46,13 +46,13 @@ socket.on('products', (data) => {
             catalogue.innerHTML += content
           })
     } else {
-        console.error('La propiedad "products" no es un array:', data.products);    }
+        logger.error('La propiedad "products" no es un array:', data.products);    }
   
 });
 
 //Escucho evento de confirmacion de producto agregado
 socket.on('success', () => {
-    console.log('producto agregado con exito')
+   logger.info('producto agregado con exito')
   Swal.fire({
     title: "Agregado!",
     text: "Se agrego correctamente el producto",
@@ -62,7 +62,7 @@ socket.on('success', () => {
 
 //Escucho evento de error al agregar producto
 socket.on('error', () => {
-    console.log('no se agrego')
+    logger.info('no se agrego')
   Swal.fire({
     title: 'Ups!',
     text: "No se pudo agregar el producto",

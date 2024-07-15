@@ -24,7 +24,8 @@ const { mongo_url, puerto } = configObject;
 import cookieParser from 'cookie-parser';
 import compression from "express-compression"; 
 import { errorHandler } from './middleware/errorHandler.js';
-import addLogger from './utils/logger.js';
+import { addLogger, logger } from './utils/logger.js';
+
 
 
 
@@ -79,27 +80,35 @@ app.get("/loggertest", (req,res)=>{
 app.get('/pruebas', async (req, res) => {
     try {
         const usuarios = await UsersModel.find();
+        req.logger.info("Usuarios obtenidos exitosamente");
         res.send(usuarios);
     } catch (error) {
+        req.logger.error("Error al obtener usuarios: " + error.message);
         res.status(500).send('Error de servidor');
     }
 });
 
 // Conexión a MongoDB
 mongoose.connect(mongo_url)
-    .then(() => console.log('Conectados a la BD'))
-    .catch(() => console.log('Error al conectar a la BD'));
+    .then(() => {
+        logger.info('Conectados a la BD');
+    })
+    .catch(() => 
+    {
+        logger.error('Error al conectar a la BD: ' + error.message);
+    }
+    );
 
 // Inicialización del servidor
 const httpServer = app.listen(puerto, () => {
-    console.log(`Escuchando en el puerto: ${puerto}`);
+logger.info(`Escuchando en el puerto: ${puerto}`);
 });
 
 // Chat en el ecommerce
 const io = new Server(httpServer);
 
 io.on('connection', (socket) => {
-    console.log('Nuevo usuario conectado');
+    logger.info('Nuevo usuario conectado');
 
     socket.on('message', async (data) => {
         await MessageModel.create(data);
@@ -119,6 +128,7 @@ io.on('connection', (socket) => {
             }
         } catch (error) {
             socket.emit('error', { message: 'Error al agregar el producto: ' + error.message });
+            logger.error('Error al agregar el producto: ' + error.message);
         }
     });
 });

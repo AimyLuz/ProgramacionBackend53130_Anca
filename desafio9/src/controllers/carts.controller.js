@@ -2,7 +2,7 @@ import CartsService from "../service/carts.service.js";
 import mongoose from "mongoose";
 import TicketService from "../service/ticket.service.js";
 import { createError, ERROR_TYPES } from '../utils/errorDirectory.js';
-
+import { addLogger, logger } from "../utils/logger.js";
 const cs = new CartsService();
 
 class CartsController {
@@ -16,7 +16,9 @@ class CartsController {
                 res.status(400).send(respuesta);
             }
         } catch (error) {
-            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));        }
+            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));   
+            req.logger.error("Error interno del servidor" + error.mensaje)
+             }
     }
 
     // 2. Borrar carrito
@@ -29,7 +31,9 @@ class CartsController {
                 res.status(400).send(respuesta);
             }
         } catch (error) {
-            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));        }
+            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message })); 
+            req.logger.error("Error interno del servidor" + error.mensaje)
+               }
     }
 
     // 3. Agregar productos al carrito
@@ -47,7 +51,9 @@ class CartsController {
 
             }
         } catch (error) {
-            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));        }
+            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
+        }
     }
 
     // 4. Mostrar carritos
@@ -60,7 +66,9 @@ class CartsController {
                 res.status(400).send(respuesta);
             }
         } catch (error) {
-            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));        }
+            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
+        }
     }
 
     // 5. Mostrar carrito según ID
@@ -82,6 +90,7 @@ class CartsController {
            res.render("carts", { productos: productosEnCarrito });
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
 
     }
@@ -97,7 +106,9 @@ class CartsController {
 
             }
         } catch (error) {
-            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));        }
+            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message })); 
+            req.logger.error("Error interno del servidor" + error.mensaje)
+               }
     }
 
     // 7. Actualizar productos del carrito
@@ -110,7 +121,9 @@ class CartsController {
                 res.status(400).send(respuesta);
             }
         } catch (error) {
-            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));        }
+            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
+                }
     }
 
     // 8. Actualizar la cantidad de productos de un carrito
@@ -123,7 +136,9 @@ class CartsController {
                 res.status(400).send(respuesta);
             }
         } catch (error) {
-            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));        }
+            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));  
+            req.logger.error("Error interno del servidor" + error.mensaje)
+              }
     }
 
     // 9. Vaciar carrito
@@ -136,7 +151,9 @@ class CartsController {
                 res.status(400).send(respuesta);
             }
         } catch (error) {
-            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));        }
+            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message })); 
+            req.logger.error("Error interno del servidor" + error.mensaje)
+               }
     }
     //10.terminar compra
     async purchase(req, res) {
@@ -175,7 +192,9 @@ class CartsController {
                 });
             }
         } catch (error) {
-            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));        }
+            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message })); 
+            req.logger.error("Error interno del servidor" + error.mensaje)
+               }
     }
     async finalizarCompra  (req, res) {
         const { cartId } = req.params;
@@ -183,7 +202,9 @@ class CartsController {
             const resultado = await procesarCompra(cartId);
             res.status(200).json({ mensaje: 'Compra realizada con éxito', data: resultado });
         } catch (error) {
-            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));        }
+            next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));   
+            req.logger.error("Error interno del servidor" + error.mensaje)
+             }
     };
 }
 

@@ -3,7 +3,7 @@
 //Nos conectamos a MongoAtlas por medio de mongoose: 
 import configObject from "./config/config.js";
 import mongoose from "mongoose";
-
+import { addLogger, logger } from "./utils/logger.js";
 /*
 mongoose.connect(configObject.mongo_url)
   .then(()=> console.log("Conectados a la BD!"))
@@ -20,12 +20,12 @@ class BaseDatos {
 
   static getInstancia() {
       if(this.#instancia) {
-          console.log("Conexion previa");
+          logger.warn("Conexion previa");
           return this.#instancia;
       }
 
       this.#instancia = new BaseDatos(); 
-      console.log("Conexion exitosa");
+      logger.info("Conexion exitosa");
       return this.#instancia;
   }
 }

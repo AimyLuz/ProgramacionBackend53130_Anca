@@ -12,6 +12,5 @@ program
 program.parse();
 //Finalizamos acá la configuracion. 
 
-//console.log("Opciones: ", program.opts()); 
 
 export default program;

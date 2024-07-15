@@ -7,6 +7,7 @@ import UserDTO from "../dto/user.dto.js";
 import nodemailer from "nodemailer";
 import CartsService from "../service/carts.service.js";
 import MockingService from '../service/mocking.service.js';
+import { addLogger, logger } from "../utils/logger.js";
 const ps = new ProductsService();
 const cc = new CartsController();
 const cr = new CartsRepository();
@@ -17,7 +18,7 @@ class ViewsController {
     async renderProducts(req, res) {
         try {
             const { page = 1, limit = 2, sort, query } = req.query;
-            //console.log('Request query parameters (view):', { page, limit, sort, query });
+
 
             const productList = await ps.getProducts({ page: parseInt(page), limit: parseInt(limit), sort, query });
 
@@ -25,7 +26,6 @@ class ViewsController {
                 throw new Error("Lista de productos es indefinida o vacía");
             }
 
-            //console.log('Product list (view):', productList);
 
             const requiredProperties = ['hasPrevPage', 'hasNextPage', 'prevPage', 'nextPage', 'page', 'totalPages'];
 
@@ -48,6 +48,7 @@ class ViewsController {
             });
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
     async renderProfile(req, res) {
@@ -71,7 +72,7 @@ class ViewsController {
             const carrito = await cr.getCartById(cartId);
     
             if (!carrito) {
-                console.log("No existe ese carrito con el id");
+                req.logger.info("No existe ese carrito con el id");
                 return res.status(404).json({ error: "Carrito no encontrado" });
             }
     
@@ -94,6 +95,7 @@ class ViewsController {
             res.render("carts", { productos: productosEnCarrito, totalCompra, cartId });
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
 
@@ -110,6 +112,7 @@ class ViewsController {
             res.render("realtimeproducts");
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
 
@@ -131,6 +134,7 @@ class ViewsController {
             }
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
 
@@ -164,6 +168,7 @@ class ViewsController {
             res.render("mail");
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
     async renderMockingProducts(req, res) {

@@ -79,4 +79,4 @@ const addLogger = (req, res, next)=>{
     next();
 }
 
-export default addLogger;
+export { addLogger, logger };

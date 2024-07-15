@@ -2,7 +2,7 @@ import ProductsService from "../service/products.service.js";
 import { createError, ERROR_TYPES } from '../utils/errorDirectory.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import { adminOnly } from '../middleware/authorizationMiddleware.js';
-
+import { addLogger, logger } from "../utils/logger.js";
 const ps = new ProductsService();
 
 class ProductsController {
@@ -22,6 +22,7 @@ class ProductsController {
             });
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
 
@@ -41,6 +42,7 @@ class ProductsController {
             });
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
 
@@ -62,6 +64,7 @@ class ProductsController {
             }
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
 
@@ -77,6 +80,7 @@ class ProductsController {
             }
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
 
@@ -93,6 +97,7 @@ class ProductsController {
             }
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
 
@@ -111,6 +116,7 @@ class ProductsController {
             }
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
 }

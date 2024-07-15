@@ -4,6 +4,9 @@ import { createHash, isValidPassword } from "../utils/hashbcryp.js";
 import UserDTO from "../dto/user.dto.js";
 import UsersModel from "../models/users.model.js";
 import ensureCart from "../middleware/ensureCart.js";
+import { addLogger, logger } from "../utils/logger.js";
+
+
 class UserController {
     async register(req, res) {
         const { first_name, last_name, email, password, age } = req.body;
@@ -30,6 +33,7 @@ class UserController {
             res.redirect("/login");
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
 
@@ -60,6 +64,7 @@ class UserController {
             res.status(201).json(user);
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+            req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
 
@@ -82,12 +87,14 @@ class UserController {
                 });
             } catch (error) {
                 next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
+                req.logger.error("Error interno del servidor" + error.mensaje)
             }
         }
 
     async admin(req, res) {
         if (req.session.user.role !== "admin") {
             return res.status(403).send("Acceso denegado");
+
         }
         res.render("admin");
     }
