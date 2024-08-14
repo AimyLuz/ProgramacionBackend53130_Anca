@@ -8,6 +8,41 @@ import checkUserRole from "../middleware/checkrole.js";
 import UserRepository from "../repositories/user.repository.js";
 const ur = new UserRepository();
 const router = express.Router();
+
+
+// Nueva ruta para obtener todos los usuarios
+router.get("/", async (req, res) => {
+    try {
+        const users = await ur.getAll();
+        res.status(200).json(users);
+    } catch (error) {
+        req.logger.error('Error al obtener los usuarios: ' + error.message);
+        res.status(500).send('Error al obtener los usuarios');
+    }
+});
+router.get("/:uid", async (req, res) => {
+    try {
+        const userId = req.params.uid;
+        const user = await ur.getById(userId); // Suponiendo que tienes un método getById en tu UserRepository
+        if (!user) {
+            return res.status(404).send({ error: 'Usuario no encontrado' });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        req.logger.error('Error al obtener el usuario: ' + error.message);
+        res.status(500).send('Error al obtener el usuario');
+    }
+});
+router.post("/", async (req, res) => {
+    try {
+        const newUser = req.body;
+        const createdUser = await ur.create(newUser); // Suponiendo que tienes un método create en tu UserRepository
+        res.status(201).json(createdUser);
+    } catch (error) {
+        req.logger.error('Error al crear el usuario: ' + error.message);
+        res.status(500).send('Error al crear el usuario');
+    }
+});
 // Rutas para registrar y loguear usuarios
 router.post("/register", passport.authenticate("register", { failureRedirect: "/failedregister" }), uc.register);
 router.post("/login", passport.authenticate("login", { failureRedirect: "/faillogin" }), uc.login);

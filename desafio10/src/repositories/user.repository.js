@@ -9,9 +9,8 @@ class UserRepository {
 
     async getById(id) {
         const user = await userDAO.getById(id);
-        return new UserDTO(user);
+        return user ? new UserDTO(user) : null;
     }
-
     async create(user) {
         const newUser = await userDAO.create(user);
         return new UserDTO(newUser);

@@ -27,6 +27,23 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { addLogger, logger } from './utils/logger.js';
 
 
+//desafio clase 39
+import swaggerUiExpress from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
+
+const swaggerOptions ={
+    definition:{
+        openapi: "3.0.1",
+        info: {
+            title: "Documentacion de la app ArrabalMusicStore",
+            description: "Proyecto final Backend Coderhouse 2024. Ayelén Anca"
+        }
+    },
+    apis: ['./src/docs/**/*.yaml']
+}
+
+const specs = swaggerJSDoc(swaggerOptions);
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 
 
@@ -139,3 +156,5 @@ io.on('connection', (socket) => {
 
 //import SocketManager from './sockets/socketmanager.js';
 //new SocketManager(httpServer);
+
+
