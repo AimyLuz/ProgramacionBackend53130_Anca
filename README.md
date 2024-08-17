@@ -73,9 +73,19 @@
 ###  Practica Integradora 3 : sobre tu ecommerce
     clase 37
     Entregado: ✅
-    Aprobado:  
+    Aprobado:  ✅
 
 ### Desafío 10 :  Documentar API
     clase 39
+    Entregado:  ✅
+    Aprobado:  ✅
+
+### Desafío 11 :  Módulos de testing para el Proyecto Final
+    clase 41
+    Entregado:  
+    Aprobado:  
+
+### Practica integradora 4: Práctica de integración sobre tu ecommerce 
+    clase 44
     Entregado:  
     Aprobado:  
