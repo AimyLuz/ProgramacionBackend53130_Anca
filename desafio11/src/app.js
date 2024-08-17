@@ -26,7 +26,7 @@ import compression from "express-compression";
 import { errorHandler } from './middleware/errorHandler.js';
 import { addLogger, logger } from './utils/logger.js';
 
-
+import config from './config/config.js';
 //desafio clase 39
 import swaggerUiExpress from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
@@ -106,7 +106,7 @@ app.get('/pruebas', async (req, res) => {
 });
 
 // Conexión a MongoDB
-mongoose.connect(mongo_url)
+mongoose.connect(config.mongo_url)
     .then(() => {
         logger.info('Conectados a la BD');
     })

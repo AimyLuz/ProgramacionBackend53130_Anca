@@ -45,7 +45,6 @@ class ProductsController {
             req.logger.error("Error interno del servidor" + error.mensaje)
         }
     }
-
     async getProductById(req, res, next) {
         try {
             const productId = req.params.pid;

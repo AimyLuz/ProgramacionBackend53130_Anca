@@ -52,18 +52,22 @@ class ViewsController {
         }
     }
     async renderProfile(req, res) {
+        try {
         //Con DTO: 
          //Con DTO: 
          const userDto = new UserDTO(
-            req.user.first_name,
-            req.user.last_name,
-            req.user.role,
-            req.user.email,
-            req.user.age,
-            req.user.cart
+            req.session.user.first_name,
+            req.session.user.last_name,
+            req.session.user.role,
+            req.session.user.email,
+            req.session.user.age,
+            req.session.user.cart
         );
-        const isAdmin = req.user.role === 'admin';
+        const isAdmin = req.session.user.role === 'admin';
         res.render("profile", { user: userDto, isAdmin });
+    } catch (error) {
+        next(error);
+    }
     }
     async renderCart(req, res) {
         const cartId = req.session.user.cart;
