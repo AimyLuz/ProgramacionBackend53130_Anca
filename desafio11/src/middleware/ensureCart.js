@@ -1,4 +1,4 @@
-//ensureCart.js
+//middleware/ensureCart.js
 import CartsModel from "../models/carts.model.js";
 import UsersModel from "../models/users.model.js";
 const ensureCart = async (req, res, next) => {
@@ -16,6 +16,7 @@ const ensureCart = async (req, res, next) => {
 
             req.session.user.cart = newCart._id; // Actualizar la sesión con el carrito del usuario
             //req.session.user.cart = 'default-cart-id';
+            console.log("Asegurando carrito para el usuario:", req.user);
         } catch (error) {
             console.error("Error al asegurar carrito para el usuario:", error);
             return res.status(500).json({ error: 'Error interno del servidor' });

@@ -58,6 +58,7 @@ class UserController {
             req.session.login = true;
             res.redirect("/profile");
         });
+        console.log("Sesión del usuario después de login:", req.session.user);
     }
     async createUser(req, res) {
         try {

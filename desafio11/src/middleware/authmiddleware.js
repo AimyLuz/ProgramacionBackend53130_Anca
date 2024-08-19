@@ -14,5 +14,6 @@ if (req.isAuthenticated()) {
 
 // Si el usuario no está autenticado, redirige a la página de login o responde con un error
 res.redirect('/login');
+console.log("Autenticación de usuario:", req.isAuthenticated());
 };
 export default authMiddleware;
