@@ -37,7 +37,7 @@ class CartsController {
     }
 
     // 3. Agregar productos al carrito
-    async addProductToCart(req, res) {
+    async addProductToCart(req, res, next) {
         const cartId = req.params.cid;
         const productId = req.params.pid;
         const quantity = req.body.quantity || 1;
@@ -60,6 +60,7 @@ class CartsController {
         } catch (error) {
             next(createError(ERROR_TYPES.SERVER_ERROR, "Error interno del servidor", { originalError: error.message }));
             req.logger.error("Error interno del servidor" + error.mensaje)
+            console.log("Error en addproducttocart: ", error);
         }
     }
 

@@ -1,6 +1,11 @@
 import CartsRepository from "../repositories/carts.repository.js";
 import mongoose from "mongoose";
+import ProductsModel from "../models/products.model.js"
+import ProductsService from '../service/products.service.js'; // Importa el servicio correcto
 
+const ps = new ProductsService();
+
+;
 const cr = new CartsRepository();
 
 class CartsService {
@@ -79,10 +84,14 @@ class CartsService {
     // 6. Borrar un producto del carrito
     async deleteProductCart(cartId, productId) {
         try {
-            await cr.deleteProductFromCart(cartId, productId);
-            return { status: true, msg: "Producto borrado del carrito correctamente" };
+            const result = await cr.deleteProductFromCart(cartId, productId);
+            if (result) {
+                return { status: 'success', msg: "Producto borrado del carrito correctamente" };
+            } else {
+                return { status: 'error', msg: "Producto no encontrado en el carrito" };
+            }
         } catch (error) {
-            return { status: false, msg: "Error al intentar borrar producto del carrito: " + error.message };
+            return { status: 'error', msg: "Error al intentar borrar producto del carrito: " + error.message };
         }
     }
 
@@ -126,6 +135,12 @@ class CartsService {
         } catch (error) {
             return { status: false, msg: "Error al intentar vaciar el carrito: " + error.message };
         }
+    }
+    async getProductById(productId) {
+        // Implementación para obtener el producto por ID
+        // Puede ser una consulta a la base de datos o similar
+        const product = ps.getProductById(productId);
+        return product;
     }
 }
 

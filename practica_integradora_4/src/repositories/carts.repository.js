@@ -40,12 +40,26 @@ class CartsRepository {
 
     // 6. Borrar un producto del carrito
     async deleteProductFromCart(cartId, productId) {
-        const cart = await CartsModel.findById(cartId);
-        if (!cart) {
-            throw new Error(`Cart with ID ${cartId} not found`);
+        try {
+            const cart = await CartsModel.findById(cartId);
+            if (!cart) {
+                throw new Error("Carrito no encontrado");
+            }
+    
+            // Encuentra el producto en el carrito y elimínalo
+            const productIndex = cart.products.findIndex(p => p.product._id.toString() === productId);
+            if (productIndex === -1) {
+                throw new Error("Producto no encontrado en el carrito");
+            }
+    
+            cart.products.splice(productIndex, 1);
+            await cart.save();
+    
+            return true; // Asegúrate de devolver un valor que indique éxito
+        } catch (error) {
+            console.error("Error al borrar producto del carrito:", error);
+            return false;
         }
-        cart.products = cart.products.filter(item => item.product.toString() !== productId);
-        return await cart.save();
     }
 
     // 7. Actualizar productos del carrito

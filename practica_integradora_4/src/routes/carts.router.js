@@ -17,16 +17,17 @@ router.post('/:cid/product/:pid', userOnly, cartsController.addProductToCart);
 router.get('/', userOnly, cartsController.getCarts);
 router.get('/:cid', userOnly, cartsController.getCartById);
 router.delete('/:cid/product/:pid', userOnly, async (req, res) => {
+    const { cid: cartId, pid: productId } = req.params;
     try {
-        const { cid, pid } = req.params;
-        const result = await cs.deleteProductCart(cid, pid);
+        const result = await cs.deleteProductCart(cartId, productId);
         if (result.status) {
-            res.json({ status: 'success' });
+            res.status(200).json({ status: 'success', msg: result.msg });
         } else {
-            res.json({ status: 'failure' });
+            res.status(400).json({ status: 'error', msg: result.msg });
         }
     } catch (error) {
-        res.status(500).json({ status: 'error', message: error.message });
+        console.error("Error interno del servidor:", error);
+        res.status(500).json({ status: 'error', msg: "Error interno del servidor" });
     }
 });
 router.put('/:cid', userOnly, cartsController.updateCart);

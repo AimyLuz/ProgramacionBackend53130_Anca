@@ -27,7 +27,7 @@ app.use(express.static("./src/public"));
 //Session
 app.use(session({
   store:MongoStore.create({
-    mongoUrl:"mongodb+srv://aimyluz:coderhouse@cluster0.5qf0kec.mongodb.net/Ecommerce?retryWrites=true&w=majority&appName=Cluster0",
+    mongoUrl:"mongodb+srv://@cluster0.5qf0kec.mongodb.net/Ecommerce?retryWrites=true&w=majority&appName=Cluster0",
     ttl:100,
   }),
   secret:"secretCoder",
